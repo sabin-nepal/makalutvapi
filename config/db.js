@@ -13,7 +13,8 @@ const db = new Sequelize(
     min: 0,
     idle: 10000
   },
-
-  // SQLite only
-  storage: 'path/to/database.sqlite'
 });
+
+db.sync();
+
+module.exports = db;
