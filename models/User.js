@@ -1,13 +1,15 @@
-const Sequelize = require("sequelize");
+const {Sequelize,DataTypes} = require("sequelize");
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require('crypto');
 
 const User = db.define("user", {
   id: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataTypes.UUIDV4,
+    allowNull: false,
   },
   name: Sequelize.STRING,
   password: {
@@ -70,5 +72,18 @@ User.prototype.getJwtSignedToken = function () {
     }
   );
 };
+
+User.prototype.getPasswordRestToken = async function(){
+
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    this.resetPasswordToken = resetPasswordToken;
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    this.save();
+    return resetToken;
+}
 
 exports.User = User;

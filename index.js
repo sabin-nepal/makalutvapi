@@ -7,7 +7,8 @@ const bodyParser = require("body-parser");
 dotenv.config({
 	path: './config/config.env'
 })
-require('./models/User.js')
+require('./models/news/News.js')
+//require('./models/Category.js')
 //initialize port 
 const port = process.env.PORT || 5000;
 
