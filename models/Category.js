@@ -18,7 +18,7 @@ Category.beforeSave(async function (category) {
     const slug = slugify(category.title);
     const count = await Category.count({
     		  where: {
-    		    slug: slug,
+    		    title: title,
     		  },
     		});
 	if(!count)

@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const db = require("../../config/db");
 const Category = require("../Category")
 const { User } = require('../User')
+var slugify = require('slugify')
 
 const News = db.define("news", {
   id: {
@@ -20,6 +21,25 @@ const News = db.define("news", {
   },
 });
 
+News.beforeSave(async function (news) {
+  try {
+    const slug = slugify(news.title);
+    const count = await News.count({
+          where: {
+            title: news.title,
+          },
+        });
+  if(!count)
+    news.slug = slug;
+  else{ 
+    const i = count + 1;
+    news.slug = slug+'-'+i; 
+  }
+  } catch (e) {
+    throw new Error();
+  }
+});
+
 News.belongsTo(User, {
   foreignKey: {
     type: Sequelize.UUID
@@ -27,7 +47,6 @@ News.belongsTo(User, {
 });
 Category.belongsTo(User, {
   foreignKey: {
-    name:"userId",
     type: Sequelize.UUID
   }
 });
