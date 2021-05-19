@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require("sequelize");
+const Sequelize = require("sequelize");
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -6,9 +6,9 @@ const crypto = require('crypto');
 
 const User = db.define("user", {
   id: {
-    type: DataTypes.UUID,
+    type: Sequelize.UUID,
     primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+    defaultValue: Sequelize.UUIDV4,
     allowNull: false,
   },
   name: Sequelize.STRING,

@@ -1,17 +1,19 @@
-const {Sequelize,DataTypes} = require("sequelize");
+const Sequelize = require("sequelize");
 const db = require("../../config/db");
 const Category = require("../Category")
 const { User } = require('../User')
 
 const News = db.define("news", {
   id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
   title: Sequelize.TEXT,
   slug:  Sequelize.TEXT,
+  content: Sequelize.TEXT,
+  type:Sequelize.STRING,
   status: {
     type: Sequelize.BOOLEAN,
     defaultValue: true,
@@ -20,12 +22,13 @@ const News = db.define("news", {
 
 News.belongsTo(User, {
   foreignKey: {
-    type: DataTypes.UUID
+    type: Sequelize.UUID
   }
 });
 Category.belongsTo(User, {
   foreignKey: {
-    type: DataTypes.UUID
+    name:"userId",
+    type: Sequelize.UUID
   }
 });
 News.belongsToMany(Category, { through: 'CategoryNews' });

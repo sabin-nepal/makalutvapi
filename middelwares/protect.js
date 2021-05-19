@@ -48,3 +48,5 @@ const protect = async (req,res,next) => {
 	}
 
 }
+
+exports.protect = protect;

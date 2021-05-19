@@ -21,7 +21,9 @@ app.use(bodyParser.json())
 
 //Routes
 const auth = require("./routes/auth");
+const category = require("./routes/category");
 app.use('/api/v1/auth',auth);
+app.use('/api/v1/category',category);
 
 app.get('/', function (req, res) {
   res.send('Hello World')
