@@ -14,6 +14,7 @@ const News = db.define("news", {
   title: Sequelize.TEXT,
   slug:  Sequelize.TEXT,
   content: Sequelize.TEXT,
+  excerpt: Sequelize.TEXT,
   type:Sequelize.STRING,
   status: {
     type: Sequelize.BOOLEAN,

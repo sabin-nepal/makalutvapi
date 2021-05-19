@@ -2,7 +2,7 @@ const { News,Category } = require('../../models/news/News');
 
 exports.create = async (req,res) => {
 
-	const { title, content, category,type="news",status} = req.body
+	const { title, content, excerpt,category,type="news",status} = req.body
 
 	if(!title || !content)
 		return res.status(406).json({
@@ -12,6 +12,7 @@ exports.create = async (req,res) => {
 	const news =  await News.create({
 		title:title,
 		content:content,
+		excerpt:excerpt,
 		type:type,
 		status:status,
 		userId:req.user.id,
@@ -23,16 +24,33 @@ exports.create = async (req,res) => {
 	});
 }
 
+exports.getAll = async(req,res) => {
+
+	const news = await News.findAll();
+	res.status(200).json({
+	  data:news,		
+	  success: true
+	});
+}
+
+exports.getSingle = async(req,res) => {
+
+	const { id } = req.params;
+	const news = await News.findByPk(id);
+	if(!news)
+		return res.status(204).json();
+	res.status(200).json({
+	  data:news,		
+	  success: true,
+	});
+}
+
 exports.edit = async (req,res) => {
-
-
 
 }
 
 exports.deletes = async (req,res) => {
-	
-	const { id } = req.params;
-	const news = await News.findByPk(id);
+	const news = await News.findByPk(req.params.id);
 	if(!news)
 		return res.status(401).json({
 		  success: false,
