@@ -9,17 +9,12 @@ exports.create = async (req,res) => {
 		  success: false,
 		  msg: "Title or content cannot be empty.",
 		});
-	try{
-
-	}
-	catch(err){
-
-	}
 	const news =  await News.create({
 		title:title,
 		content:content,
 		type:type,
 		status:status,
+		userId:req.user.id,
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
 	res.status(201).json({
@@ -30,10 +25,23 @@ exports.create = async (req,res) => {
 
 exports.edit = async (req,res) => {
 
+
+
 }
 
 exports.deletes = async (req,res) => {
-
-
+	
+	const { id } = req.params;
+	const news = await News.findByPk(id);
+	if(!news)
+		return res.status(401).json({
+		  success: false,
+		  msg: "Unauthorized.",
+		});
+	await news.destroy();
+	res.status(201).json({
+	  success: true,
+	  msg: "News has been deleted successfully.",
+	});	
 
 }
