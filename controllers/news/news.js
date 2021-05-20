@@ -30,7 +30,14 @@ exports.create = async (req,res) => {
 
 exports.getAll = async(req,res) => {
 
-	const news = await News.findAll();
+	const news = await News.findAll({
+	  where: {
+	    status: 'active'
+	  },
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
 	res.status(200).json({
 	  data:news,		
 	  success: true

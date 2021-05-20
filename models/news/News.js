@@ -17,8 +17,8 @@ const News = db.define("news", {
   excerpt: Sequelize.TEXT,
   thumbnail:Sequelize.STRING,
   status: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: true,
+    type: Sequelize.STRING,
+    defaultValue: 'active',
   },
 });
 

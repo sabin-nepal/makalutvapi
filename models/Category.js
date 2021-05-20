@@ -10,8 +10,8 @@ const Category = db.define("category", {
       allowNull: false,
     },
   title: Sequelize.STRING,
-  type: Sequelize.STRING,
   slug: Sequelize.STRING,
+  type: Sequelize.STRING,
 });
 
 Category.beforeSave(async function (category) {

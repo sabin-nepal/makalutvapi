@@ -2,7 +2,7 @@ const Category = require('../models/Category');
 
 exports.create = async (req,res) => {
 
-	const { title } = req.body
+	const { title,type="news" } = req.body
 	console.log(title)
 
 	if(!title)
@@ -13,6 +13,7 @@ exports.create = async (req,res) => {
 	await Category.create({
 	    title:title,
 	    userId:req.user.id,
+	    type:type,
 	  });
 	res.status(201).json({
 	  success: true,
