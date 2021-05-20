@@ -2,16 +2,13 @@ const { News,Category } = require('../../models/news/News');
 
 exports.create = async (req,res) => {
 
-	let url;
-	const { title, content, excerpt,category,type="news",status} = req.body
+	const { title, content, excerpt,url,category,type="news",status} = req.body
 
 	if(!title || !content)
 		return res.status(406).json({
 		  success: false,
 		  msg: "Title or content cannot be empty.",
-		});
-	if(req.file)
-		 url = process.env.UPLOAD_URL + req.file.filename	
+		});	
 	const news =  await News.create({
 		title:title,
 		content:content,
