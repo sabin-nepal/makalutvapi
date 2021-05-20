@@ -1,10 +1,9 @@
 var multer = require('multer')
 const path = require('path')
 
-//image uploading
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/uploads/')
+    cb(null, `./public/uploads/${file.fieldname}s`)
   },
   filename: function (req, file, cb) {
     cb(null,  Date.now() + '-' + path.basename(file.originalname))
@@ -12,6 +11,7 @@ var storage = multer.diskStorage({
 })
  
 
+//image uploading
 const filter = (req,file,cb) => {
 	if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
 		cb(null,true)
@@ -35,8 +35,12 @@ const imageUpload = multer({
  
 
 const videoFilter = (req,file,cb) => {
-	console.log(file);
-	cb(null,true);
+	if(file.mimetype === 'video/mp4'){
+		cb(null,true)
+	}
+	else{
+		cb(new Error('Unsupported files'),false)
+	}
 }
 
 const videoUpload = multer({
