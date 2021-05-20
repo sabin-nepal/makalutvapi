@@ -9,8 +9,9 @@ const Category = db.define("category", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.TEXT,
-  slug: Sequelize.TEXT,
+  title: Sequelize.STRING,
+  type: Sequelize.STRING,
+  slug: Sequelize.STRING,
 });
 
 Category.beforeSave(async function (category) {

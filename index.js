@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 dotenv.config({
 	path: './config/config.env'
 })
-require('./models/news/News.js')
+//require('./models/news/News.js')
 //require('./models/Category.js')
 //initialize port 
 const port = process.env.PORT || 5000;
@@ -18,14 +18,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+//public path
+app.use('/public',express.static('public'));
 
 //Routes
 const auth = require("./routes/auth");
 const category = require("./routes/category");
 const news = require("./routes/news");
+//const upload = require("./routes/upload");
 app.use('/api/v1/auth',auth);
 app.use('/api/v1/category',category);
 app.use('/api/v1/news',news);
+//app.use('/api/v1/upload',upload);
 
 app.get('/', function (req, res) {
   res.send('Hello World')

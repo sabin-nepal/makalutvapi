@@ -11,11 +11,11 @@ const News = db.define("news", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.TEXT,
+  title: Sequelize.STRING,
   slug:  Sequelize.TEXT,
   content: Sequelize.TEXT,
   excerpt: Sequelize.TEXT,
-  type:Sequelize.STRING,
+  thumbnail:Sequelize.STRING,
   status: {
     type: Sequelize.BOOLEAN,
     defaultValue: true,

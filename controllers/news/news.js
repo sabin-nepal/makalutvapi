@@ -2,6 +2,7 @@ const { News,Category } = require('../../models/news/News');
 
 exports.create = async (req,res) => {
 
+	let url;
 	const { title, content, excerpt,category,type="news",status} = req.body
 
 	if(!title || !content)
@@ -9,10 +10,13 @@ exports.create = async (req,res) => {
 		  success: false,
 		  msg: "Title or content cannot be empty.",
 		});
+	if(req.file)
+		 url = process.env.UPLOAD_URL + req.file.filename	
 	const news =  await News.create({
 		title:title,
 		content:content,
 		excerpt:excerpt,
+		thumbnail:url,
 		type:type,
 		status:status,
 		userId:req.user.id,
