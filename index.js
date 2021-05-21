@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 //load env variales
 dotenv.config({
-	path: './config/config.env'
+	path: './config/.env'
 })
 //require('./models/news/News.js')
 require('./models/news/Video.js')
