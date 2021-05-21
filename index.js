@@ -26,12 +26,14 @@ app.use('/public',express.static('public'));
 const auth = require("./routes/auth");
 const category = require("./routes/category");
 const news = require("./routes/news/news.js");
+const insight = require("./routes/news/insight.js");
 const video = require("./routes/news/video");
 const upload = require("./routes/upload");
 //const upload = require("./routes/upload");
 app.use('/api/v1/auth',auth);
 app.use('/api/v1/category',category);
 app.use('/api/v1/news',news);
+app.use('/api/v1/insight',insight);
 app.use('/api/v1/video',video);
 app.use('/api/v1/upload',upload);
 

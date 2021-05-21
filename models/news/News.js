@@ -12,7 +12,7 @@ const News = db.define("news", {
       allowNull: false,
     },
   title: Sequelize.STRING,
-  slug:  Sequelize.TEXT,
+  slug:  Sequelize.STRING,
   content: Sequelize.TEXT,
   excerpt: Sequelize.TEXT,
   thumbnail:Sequelize.STRING,

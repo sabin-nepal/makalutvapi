@@ -2,7 +2,7 @@ const { News,Category } = require('../../models/news/News');
 
 exports.create = async (req,res) => {
 
-	const { title, content, excerpt,url,category,type="news",status} = req.body
+	const { title, content, excerpt,url,category,status} = req.body
 
 	if(!title || !content)
 		return res.status(406).json({
@@ -14,7 +14,6 @@ exports.create = async (req,res) => {
 		content:content,
 		excerpt:excerpt,
 		thumbnail:url,
-		type:type,
 		status:status,
 		userId:req.user.id,
 	});
