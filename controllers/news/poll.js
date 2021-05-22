@@ -43,9 +43,7 @@ exports.getAll = async (req,res) => {
 		      ['createdAt', 'DESC'],
 		     ]
 		});
-	res.status(200).json({
-	  data:poll,
-	});
+	res.status(200).json(poll);
 
 }
 
