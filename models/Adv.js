@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
-const db = require("../../config/db");
+const db = require("../config/db");
+const { User } = require('./User')
 
 const Adv = db.define("advertisement", {
   id: {
@@ -13,8 +14,13 @@ const Adv = db.define("advertisement", {
   startDate:Sequelize.DATE,
   endDate:Sequelize.DATE,
   status: {
-    type: Sequelize.STRING,
-    defaultValue: 'active',
+    type: Sequelize.BOOLEAN,
+    defaultValue: true,
   },
 });
-exports.Adv = Adv;
+Adv.belongsTo(User, {
+  foreignKey: {
+    type: Sequelize.UUID
+  }
+});
+module.exports = Adv;

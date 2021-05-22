@@ -1,6 +1,5 @@
 const Sequelize = require("sequelize");
 const db = require("../../config/db");
-const { Poll } = require('./Poll')
 
 const PollResult = db.define("pollResult", {
   id: {
@@ -12,5 +11,5 @@ const PollResult = db.define("pollResult", {
   yesCount: Sequelize.BIGINT,
   noCount: Sequelize.BIGINT
 });
-PollResult.belongsTo(Poll);
+
 exports.PollResult = PollResult;
