@@ -31,8 +31,5 @@ exports.getAll = async(req,res) => {
 	      ['createdAt', 'DESC'],
 	     ] 
 	});
-	res.status(200).json({
-	  data:insight,		
-	  success: true
-	});
+	res.status(200).json(insight);
 }

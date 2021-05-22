@@ -34,10 +34,7 @@ exports.getAll = async(req,res) => {
 	      ['createdAt', 'DESC'],
 	     ] 
 	});
-	res.status(200).json({
-	  data:news,		
-	  success: true
-	});
+	res.status(200).json(news);
 }
 
 exports.getSingle = async(req,res) => {
@@ -46,10 +43,7 @@ exports.getSingle = async(req,res) => {
 	const news = await News.findByPk(id);
 	if(!news)
 		return res.status(204).json();
-	res.status(200).json({
-	  data:news,		
-	  success: true,
-	});
+	res.status(200).json(news);
 }
 
 exports.edit = async (req,res) => {
