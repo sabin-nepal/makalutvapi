@@ -7,7 +7,7 @@ const db = new Sequelize(
   {
   host: 'localhost',
   dialect: 'mysql',
-
+  define: { charset: 'utf8', dialectOptions: { collate: 'utf8_general_ci' }, },
   pool: {
     max: 5,
     min: 0,
