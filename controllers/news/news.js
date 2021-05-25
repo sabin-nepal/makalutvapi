@@ -33,6 +33,7 @@ exports.getAll = async(req,res) => {
 	  include: [
 	    	{
 	    	 model: Category,
+	    	 through: {attributes: []}
 	    	},
 	    ],
 	  order: [

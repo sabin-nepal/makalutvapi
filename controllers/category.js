@@ -3,7 +3,6 @@ const Category = require('../models/Category');
 exports.create = async (req,res) => {
 
 	const { title,type="news" } = req.body
-	console.log(title)
 
 	if(!title)
 		return res.status(406).json({
