@@ -20,7 +20,10 @@ const Category = db.define("category", {
 
 Category.beforeSave(async function (category) {
   try {
-    const slug = slugify(category.title);
+    const slug = slugify(category.title,{
+        replacement: '-',
+        remove: '?',     
+      });;
     const count = await Category.count({
     		  where: {
     		    title: category.title,

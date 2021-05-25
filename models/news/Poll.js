@@ -23,7 +23,7 @@ const Poll = db.define("poll", {
 });
 Poll.beforeSave(async function (poll) {
   try {
-    const slug = slugify(news.title,{
+    const slug = slugify(poll.title,{
             replacement: '-',
             remove: '?',     
           });;
