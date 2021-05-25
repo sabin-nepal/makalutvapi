@@ -9,8 +9,8 @@ const Category = db.define("category", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.STRING,
-  slug: Sequelize.STRING,
+  title: Sequelize.TEXT,
+  slug: Sequelize.TEXT,
   type: Sequelize.STRING,
   status: {
     type: Sequelize.STRING,
