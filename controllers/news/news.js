@@ -30,6 +30,11 @@ exports.getAll = async(req,res) => {
 	  where: {
 	    status: 'active'
 	  },
+	  include: [
+	    	{
+	    	 model: Category,
+	    	},
+	    ],
 	  order: [
 	      ['createdAt', 'DESC'],
 	     ] 

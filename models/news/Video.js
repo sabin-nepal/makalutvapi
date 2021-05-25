@@ -11,8 +11,8 @@ const Video = db.define("video", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.STRING,
-  slug: Sequelize.STRING,
+  title: Sequelize.TEXT,
+  slug: Sequelize.TEXT,
   video: Sequelize.STRING,
   thumbnail: Sequelize.STRING,
   status: {
@@ -23,7 +23,10 @@ const Video = db.define("video", {
 
 Video.beforeSave(async function (video) {
   try {
-    const slug = slugify(video.title);
+    const slug = slugify(news.title,{
+            replacement: '-',
+            remove: '?',     
+          });;
     const count = await Video.count({
     		  where: {
     		    title: video.title,

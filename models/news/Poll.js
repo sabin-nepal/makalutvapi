@@ -11,8 +11,8 @@ const Poll = db.define("poll", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.STRING,
-  slug: Sequelize.STRING,
+  title: Sequelize.TEXT,
+  slug: Sequelize.TEXT,
   image: Sequelize.STRING,
   content: Sequelize.JSON,
   endDate:Sequelize.DATE,
@@ -23,7 +23,10 @@ const Poll = db.define("poll", {
 });
 Poll.beforeSave(async function (poll) {
   try {
-    const slug = slugify(poll.title);
+    const slug = slugify(news.title,{
+            replacement: '-',
+            remove: '?',     
+          });;
     const count = await Poll.count({
           where: {
             title: poll.title,

@@ -24,7 +24,10 @@ const News = db.define("news", {
 
 News.beforeSave(async function (news) {
   try {
-    const slug = slugify(news.title);
+    const slug = slugify(news.title,{
+        replacement: '-',
+        remove: '?',     
+      });;
     const count = await News.count({
           where: {
             title: news.title,
