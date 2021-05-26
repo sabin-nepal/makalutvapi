@@ -70,3 +70,28 @@ exports.deletes = async (req,res) => {
 	});	
 
 }
+
+//categorynews
+
+exports.getCategoryNews = async (req,res) => {
+
+	const news = await News.findAll({
+		where: {
+    	   status: 'active'
+    	 },
+    	 order: [
+    	     ['createdAt', 'DESC'],
+    	    ],
+		include: [
+	    	{
+	    	 model: Category,
+	    	 attributes: ['title'],
+	    	 where: {
+	    	   id: req.params.id
+	    	 },
+	    	 through: {attributes: []}
+	    	},
+	    ]
+	});
+	res.status(200).json(news);
+}
