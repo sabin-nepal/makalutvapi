@@ -1,5 +1,5 @@
 const Adv = require('../models/Adv');
-
+const category = require('../models/Category')
 exports.create = async (req,res) => {
 
 	const { title,image,startDate,endDate,status} = req.body
@@ -14,10 +14,9 @@ exports.create = async (req,res) => {
 		status:status,
 		userId:req.user.id,
 	});
-	await insight.addCategory(category, { through: { selfGranted: false } });
 	res.status(201).json({
 	  success: true,
-	  msg: "Insight created successfully.",
+	  msg: "Advertsiment created successfully.",
 	});
 	
 }
