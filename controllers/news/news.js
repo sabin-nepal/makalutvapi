@@ -3,7 +3,7 @@ var admin = require("firebase-admin");
 
 exports.create = async (req,res) => {
 
-	const { title, content, excerpt,url,category,status} = req.body
+	const { title, content, excerpt,image,category,status} = req.body
 	if(!title || !content)
 		return res.status(406).json({
 		  success: false,
@@ -13,12 +13,12 @@ exports.create = async (req,res) => {
 		title:title,
 		content:content,
 		excerpt:excerpt,
-		thumbnail:url,
+		thumbnail:image,
 		status:status,
 		userId:req.user.id,
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
-	await sendNotification(category,title,content,url);
+	await sendNotification(category,title,content,image);
 	res.status(201).json({
 	  success: true,
 	  msg: "News created successfully.",
@@ -54,7 +54,31 @@ exports.getSingle = async(req,res) => {
 }
 
 exports.edit = async (req,res) => {
-
+	const { title, content, excerpt,image,category,status} = req.body
+	const news = await News.findByPk(req.params.id,{
+			include: [
+		    	{
+		    	 model: Category,
+		    	},
+		    ]
+	});
+	if(!news)
+		return res.status(401).json({
+		  success: false,
+		  msg: "Unauthorized.",
+		});
+	await news.removeCategory(news.categories)
+	news.title = title
+	news.content = content
+	news.excerpt = excerpt
+	news.thumbnail = image
+	news.status = status
+	await news.addCategory(category, { through: { selfGranted: false } });
+	await news.save();
+	res.status(201).json({
+	  success: true,
+	  msg: "News has been deleted successfully.",
+	});	
 }
 
 exports.deletes = async (req,res) => {
@@ -64,7 +88,7 @@ exports.deletes = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
-	await news.destroy();
+	await news.destroy();	
 	res.status(201).json({
 	  success: true,
 	  msg: "News has been deleted successfully.",
@@ -99,7 +123,7 @@ exports.getCategoryNews = async (req,res) => {
 
 
 
- async function sendNotification(topics,title,content,image){
+async function sendNotification(topics,title,content,image){
 	for(const topic in topics){
 		const message = {
 		  data: {

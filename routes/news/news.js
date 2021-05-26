@@ -15,6 +15,7 @@ const{
 
 router.route('/').get(getAll);
 router.route('/:id').get(getSingle);
+router.route('/edit/:id').post(protect,edit);
 router.route('/create').post(protect,create);
 router.route('/delete/:id').post(protect,deletes);
 router.route('/category/:id').get(getCategoryNews);
