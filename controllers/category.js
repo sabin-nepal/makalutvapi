@@ -23,7 +23,8 @@ exports.create = async (req,res) => {
 
 exports.getAll = async (req,res) => {
 
-	
+	const category = await Category.findAll();
+	res.status(200).json(category);
 
 }
 
