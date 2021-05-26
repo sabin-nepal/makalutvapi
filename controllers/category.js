@@ -21,6 +21,12 @@ exports.create = async (req,res) => {
 	
 }
 
+exports.getAll = async (req,res) => {
+
+	
+
+}
+
 exports.edit = async (req,res) => {
 
 }

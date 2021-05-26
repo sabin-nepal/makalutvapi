@@ -1,9 +1,9 @@
 const { News,Category } = require('../../models/news/News');
+var admin = require("firebase-admin");
 
 exports.create = async (req,res) => {
 
 	const { title, content, excerpt,url,category,status} = req.body
-
 	if(!title || !content)
 		return res.status(406).json({
 		  success: false,
@@ -18,6 +18,7 @@ exports.create = async (req,res) => {
 		userId:req.user.id,
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
+	await sendNotification(category,title,content,url);
 	res.status(201).json({
 	  success: true,
 	  msg: "News created successfully.",
@@ -94,4 +95,21 @@ exports.getCategoryNews = async (req,res) => {
 	    ]
 	});
 	res.status(200).json(news);
+}
+
+
+
+ async function sendNotification(topics,title,content,image){
+	for(const topic in topics){
+		const message = {
+		  data: {
+		    title:title,
+		    content:content,
+		    image:image,
+		  },
+		  topic: '/topics/'+topics[topic]
+		};
+		const response = admin.messaging().send(message)
+		return response;  
+	}
 }
