@@ -12,4 +12,4 @@ const PollResult = db.define("pollResult", {
   noCount: Sequelize.BIGINT
 });
 
-exports.PollResult = PollResult;
+module.exports = PollResult;

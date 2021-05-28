@@ -1,5 +1,6 @@
 const { News,Category } = require('../../models/news/News');
 const Media = require('../../models/Media')
+const PollResult = require('../../models/news/PollResult')
 const { getThumbnail } = require('../media')
 var admin = require("firebase-admin");
 
@@ -32,19 +33,27 @@ exports.create = async (req,res) => {
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
 	await news.setMedia(media);
+	if(type=='poll'){
+		await PollResult.create({
+			yesCount:0,
+			noCount:0,
+			newsId:news.id,
+		})
+	}
 	if(category)
 		await sendNotification(category,title,content,notifyImage,type);
 	res.status(201).json({
 	  success: true,
-	  msg: "News created successfully.",
+	  msg: `${type} created successfully.`,
 	});
 }
 
 exports.getAll = async(req,res) => {
-
+	const type = req.params.type;
 	const news = await News.findAll({
 	  where: {
-	    status: 'active'
+	    status: 'active',
+	    type: type,
 	  },
 	  include: [
 	    	{
@@ -56,7 +65,11 @@ exports.getAll = async(req,res) => {
 	    	 attributes: ['id','path','type'],
 	    	 through: {attributes: []}
 	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
 	    ],
+	  exclude:['type'],  
 	  order: [
 	      ['createdAt', 'DESC'],
 	     ] 
@@ -74,7 +87,7 @@ exports.getSingle = async(req,res) => {
 }
 
 exports.edit = async (req,res) => {
-	const { title, content, excerpt,media,category,status} = req.body
+	const { title, content, excerpt,media,category,status,type='news'} = req.body
 	const news = await News.findByPk(req.params.id,{
 			include: [
 		    	{
@@ -142,6 +155,50 @@ exports.getCategoryNews = async (req,res) => {
 	res.status(200).json(news);
 }
 
+//voting
+
+exports.vote = async(req,res) => {
+
+	const { choice,newsId } = req.body;
+	const pollResult = await PollResult.findOne({
+		where:{
+			newsId:newsId,
+		}
+	});
+	if(!pollResult)
+		return res.status(401).json({
+		  success: false,
+		  msg: "Unauthorized.",
+		});
+	if(choice==1)
+		pollResult.yesCount++;
+	else
+		pollResult.noCount++; 
+
+	await pollResult.save();
+	res.status(201).json({
+	  msg: "Voted successfully.",
+	});
+}
+
+exports.getVoteResult = async(req,res) => {
+
+	const pollResult = await PollResult.findOne({
+		where:{
+			newsId:req.params.id,
+		},
+		attributes: {
+		        exclude: ['createdAt', 'updatedAt']
+		    },
+	});
+	if(!pollResult)
+		return res.status(401).json({
+		  success: false,
+		  msg: "Unauthorized.",
+		});
+	res.status(200).json(pollResult);
+
+}
 
 
 async function sendNotification(topics,title,content,image,type){

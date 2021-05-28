@@ -3,6 +3,7 @@ const db = require("../../config/db");
 const Category = require("../Category")
 const Media = require("../Media")
 const { User } = require('../User')
+const PollResult = require('./PollResult')
 var slugify = require('slugify')
 
 const News = db.define("news", {
@@ -16,6 +17,7 @@ const News = db.define("news", {
   slug:  Sequelize.TEXT,
   content: Sequelize.TEXT,
   excerpt: Sequelize.TEXT,
+  endDate: Sequelize.DATE,
   type: {
     type: Sequelize.STRING,
     defaultValue: 'news',
@@ -63,5 +65,6 @@ News.belongsToMany(Category, { through: 'CategoryNews' });
 Category.belongsToMany(News, { through: 'CategoryNews' });
 News.belongsToMany(Media, { through: 'NewsMedia' });
 Media.belongsToMany(News, { through: 'NewsMedia' });
+News.hasOne(PollResult,{ onDelete: 'cascade' });
 exports.News = News;
 exports.Category = Category;
