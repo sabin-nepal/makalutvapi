@@ -11,10 +11,6 @@ const Video = db.define("video", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.TEXT,
-  slug: Sequelize.TEXT,
-  video: Sequelize.STRING,
-  thumbnail: Sequelize.STRING,
   status: {
     type: Sequelize.STRING,
     defaultValue: 'active',

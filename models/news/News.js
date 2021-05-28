@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../../config/db");
 const Category = require("../Category")
+const Media = require("../Media")
 const { User } = require('../User')
 var slugify = require('slugify')
 
@@ -15,7 +16,10 @@ const News = db.define("news", {
   slug:  Sequelize.TEXT,
   content: Sequelize.TEXT,
   excerpt: Sequelize.TEXT,
-  thumbnail:Sequelize.STRING,
+  type: {
+    type: Sequelize.STRING,
+    defaultValue: 'news',
+  },
   status: {
     type: Sequelize.STRING,
     defaultValue: 'active',
@@ -54,6 +58,8 @@ Category.belongsTo(User, {
     type: Sequelize.UUID
   }
 });
+News.belongsTo(Media);
+Category.belongsTo(Media);
 News.belongsToMany(Category, { through: 'CategoryNews' });
 Category.belongsToMany(News, { through: 'CategoryNews' });
 exports.News = News;

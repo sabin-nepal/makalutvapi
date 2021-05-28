@@ -1,4 +1,5 @@
 const { Insight,Category } = require('../../models/news/Insight');
+const Media = require('../../models/Media')
 
 exports.create = async (req,res) => {
 
@@ -7,12 +8,12 @@ exports.create = async (req,res) => {
 		return res.status(406).json({
 		  success: false,
 		  msg: "Images Cannot Be Empty",
-		});	
+		});
 	const insight =  await Insight.create({
-		images:images,
 		status:status,
 		userId:req.user.id,
 	});
+	await insight.addMedia(images, { through: { selfGranted: false } });
 	await insight.addCategory(category, { through: { selfGranted: false } });
 	res.status(201).json({
 	  success: true,

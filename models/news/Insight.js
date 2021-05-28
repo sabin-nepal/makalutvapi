@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../../config/db");
 const Category = require("../Category")
+const Media = require("../Media");
 const { User } = require('../User')
 var slugify = require('slugify')
 
@@ -11,7 +12,6 @@ const Insight = db.define("insight", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  images: Sequelize.JSON,
   status: {
     type: Sequelize.STRING,
     defaultValue: 'active',
@@ -19,6 +19,8 @@ const Insight = db.define("insight", {
  
 });
 
+Insight.belongsToMany(Media,{ through: 'InsightMedia' });
+Media.belongsToMany(Insight,{ through: 'InsightMedia'});
 Insight.belongsToMany(Category, { through: 'CategoryInsight' });
 Category.belongsToMany(Insight, { through: 'CategoryInsight' });
 exports.Insight = Insight;

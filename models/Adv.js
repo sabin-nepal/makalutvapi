@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../config/db");
 const { User } = require('./User')
+const Media = require('./Media')
 
 const Adv = db.define("advertisement", {
   id: {
@@ -10,7 +11,6 @@ const Adv = db.define("advertisement", {
       allowNull: false,
     },
   title: Sequelize.STRING,
-  image:Sequelize.STRING,
   startDate:Sequelize.DATE,
   endDate:Sequelize.DATE,
   status: {
@@ -18,9 +18,15 @@ const Adv = db.define("advertisement", {
     defaultValue: true,
   },
 });
+
+
+Adv.belongsTo(Media)
+
 Adv.belongsTo(User, {
   foreignKey: {
     type: Sequelize.UUID
   }
 });
+
+
 module.exports = Adv;

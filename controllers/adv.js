@@ -10,7 +10,7 @@ exports.create = async (req,res) => {
 		});	
 	const adv =  await Adv.create({
 		title:title,
-		image:image,
+		mediumId:image,
 		status:status,
 		userId:req.user.id,
 	});

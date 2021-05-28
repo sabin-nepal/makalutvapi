@@ -2,7 +2,7 @@ const Category = require('../models/Category');
 
 exports.create = async (req,res) => {
 
-	const { title,type="news" } = req.body
+	const { title,image,type="news" } = req.body
 
 	if(!title)
 		return res.status(406).json({
@@ -11,6 +11,7 @@ exports.create = async (req,res) => {
 		});
 	await Category.create({
 	    title:title,
+	    imageId:image,
 	    userId:req.user.id,
 	    type:type,
 	  });

@@ -3,7 +3,7 @@ var admin = require("firebase-admin");
 
 exports.create = async (req,res) => {
 
-	const { title, content, excerpt,image,category,status} = req.body
+	const { title, content, type, excerpt,image,category,status} = req.body
 	if(!title || !content)
 		return res.status(406).json({
 		  success: false,
@@ -13,8 +13,9 @@ exports.create = async (req,res) => {
 		title:title,
 		content:content,
 		excerpt:excerpt,
-		thumbnail:image,
 		status:status,
+		type:type,
+		imageId:image,
 		userId:req.user.id,
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
@@ -34,6 +35,10 @@ exports.getAll = async(req,res) => {
 	  include: [
 	    	{
 	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Image,
 	    	 through: {attributes: []}
 	    	},
 	    ],
