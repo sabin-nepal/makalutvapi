@@ -28,6 +28,13 @@ exports.getAll = async(req,res) => {
 	  where: {
 	    status: 'active'
 	  },
+	  include:[
+	  	{
+	  	 model: Media,
+	  	 attributes: ['id','path'],
+	  	 through: {attributes: []}
+	  	},
+	  ],
 	  order: [
 	      ['createdAt', 'DESC'],
 	     ] 
