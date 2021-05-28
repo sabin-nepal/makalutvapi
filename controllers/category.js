@@ -11,7 +11,7 @@ exports.create = async (req,res) => {
 		});
 	await Category.create({
 	    title:title,
-	    imageId:image,
+	    mediumId:image,
 	    userId:req.user.id,
 	    type:type,
 	  });
