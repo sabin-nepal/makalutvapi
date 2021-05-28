@@ -58,9 +58,10 @@ Category.belongsTo(User, {
     type: Sequelize.UUID
   }
 });
-News.belongsTo(Media);
 Category.belongsTo(Media);
 News.belongsToMany(Category, { through: 'CategoryNews' });
 Category.belongsToMany(News, { through: 'CategoryNews' });
+News.belongsToMany(Media, { through: 'NewsMedia' });
+Media.belongsToMany(News, { through: 'NewsMedia' });
 exports.News = News;
 exports.Category = Category;

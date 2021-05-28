@@ -1,25 +1,39 @@
 const { News,Category } = require('../../models/news/News');
+const Media = require('../../models/Media')
+const { getThumbnail } = require('../media')
 var admin = require("firebase-admin");
 
 exports.create = async (req,res) => {
-
-	const { title, content, type, excerpt,image,category,status} = req.body
-	if(!title || !content)
+	var notifyImage;
+	const { title, content, type='news', excerpt,thumbnail,media,category,status} = req.body
+	if(!title || !content || !media)
 		return res.status(406).json({
 		  success: false,
-		  msg: "Title or content cannot be empty.",
-		});	
+		  msg: "Title , content or media cannot be empty.",
+		});
+	// const getMedia = await Media.findByPk(media);
+	// if(getMedia.type=='video' && !thumbnail){
+	// 	return res.status(406).json({
+	// 	  success: false,
+	// 	  msg: "Thumbnail Required.",
+	// 	});
+	// }
+	if(thumbnail)
+		notifyImage = thumbnail;
+	notifyImage = media;
+	notifyImage = await getThumbnail(notifyImage);
 	const news =  await News.create({
 		title:title,
 		content:content,
 		excerpt:excerpt,
 		status:status,
 		type:type,
-		imageId:image,
 		userId:req.user.id,
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
-	await sendNotification(category,title,content,image);
+	await news.setMedia(media);
+	if(category)
+		await sendNotification(category,title,content,notifyImage,type);
 	res.status(201).json({
 	  success: true,
 	  msg: "News created successfully.",
@@ -38,7 +52,8 @@ exports.getAll = async(req,res) => {
 	    	 through: {attributes: []}
 	    	},
 	    	{
-	    	 model: Image,
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
 	    	 through: {attributes: []}
 	    	},
 	    ],
@@ -59,7 +74,7 @@ exports.getSingle = async(req,res) => {
 }
 
 exports.edit = async (req,res) => {
-	const { title, content, excerpt,image,category,status} = req.body
+	const { title, content, excerpt,media,category,status} = req.body
 	const news = await News.findByPk(req.params.id,{
 			include: [
 		    	{
@@ -73,12 +88,13 @@ exports.edit = async (req,res) => {
 		  msg: "Unauthorized.",
 		});
 	await news.removeCategory(news.categories)
+	await news.removeMedia(news.media)
 	news.title = title
 	news.content = content
 	news.excerpt = excerpt
-	news.thumbnail = image
 	news.status = status
 	await news.addCategory(category, { through: { selfGranted: false } });
+	await news.addMedia(media, { through: { selfGranted: false } });
 	await news.save();
 	res.status(201).json({
 	  success: true,
@@ -128,13 +144,14 @@ exports.getCategoryNews = async (req,res) => {
 
 
 
-async function sendNotification(topics,title,content,image){
+async function sendNotification(topics,title,content,image,type){
 	for(const topic in topics){
 		const message = {
 		  data: {
 		    title:title,
 		    content:content,
 		    image:image,
+		    type:type,
 		  },
 		  topic: '/topics/'+topics[topic]
 		};
