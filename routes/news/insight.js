@@ -6,11 +6,15 @@ const { protect } = require('../../middelwares/protect.js')
 const{
 	create,
 	getAll,
+	getSingle,
+	edit,
+	deletes,
 }	= require('../../controllers/news/insight.js');
 
 
 router.route('/').get(getAll);
-// router.route('/:id').get(getSingle);
+router.route('/:id').get(getSingle);
 router.route('/create').post(protect,create);
-// router.route('/delete/:id').post(protect,deletes);
+router.route('/:id').post(protect,edit);
+router.route('/delete/:id').post(protect,deletes);
 module.exports = router; 

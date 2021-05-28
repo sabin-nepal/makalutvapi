@@ -125,7 +125,7 @@ exports.deletes = async (req,res) => {
 	await news.destroy();	
 	res.status(201).json({
 	  success: true,
-	  msg: "News has been deleted successfully.",
+	  msg: "News has been edited successfully.",
 	});	
 
 }
