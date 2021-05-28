@@ -2,7 +2,7 @@ const { News,Category } = require('../../models/news/News');
 const Media = require('../../models/Media')
 const PollResult = require('../../models/news/PollResult')
 const { getThumbnail } = require('../media')
-var admin = require("firebase-admin");
+const { sendNotification } = require('../../helpers/notification.js')
 
 exports.create = async (req,res) => {
 	var notifyImage;
@@ -198,21 +198,4 @@ exports.getVoteResult = async(req,res) => {
 		});
 	res.status(200).json(pollResult);
 
-}
-
-
-async function sendNotification(topics,title,content,image,type){
-	for(const topic in topics){
-		const message = {
-		  data: {
-		    title:title,
-		    content:content,
-		    image:image,
-		    type:type,
-		  },
-		  topic: '/topics/'+topics[topic]
-		};
-		const response = admin.messaging().send(message)
-		return response;  
-	}
 }
