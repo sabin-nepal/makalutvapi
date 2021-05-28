@@ -6,8 +6,9 @@ exports.upload = async (req,res) => {
 	if(req.file)
 		 url = `${process.env.UPLOAD_URL}${req.file.fieldname}s/${req.file.filename}`
 	const image = await Media.create({
-		image:url,
+		path:url,
 		userId:req.user.id,
+		type: req.file.fieldname
 	});	
 	res.status(201).json({
 	  data: image.id,
@@ -17,25 +18,26 @@ exports.upload = async (req,res) => {
 }
 
 exports.uploads = async(req,res) =>  {
-	let image = [];
+	let media = [];
 	let data = [];
 	if(req.files)
 		req.files.forEach((file)=>{
 			const url = `${process.env.UPLOAD_URL}${file.fieldname}s/${file.filename}`
 			var set =
 			{
-				'image':url,
+				'path':url,
 				'userId':req.user.id,
+				'type': file.fieldname
 			}
 			data.push(set);
 		})
 	
-	const images = await Media.bulkCreate(data);
-	images.forEach((e)=>{
-		image.push(e.id)
+	const medias = await Media.bulkCreate(data);
+	medias.forEach((e)=>{
+		media.push(e.id)
 	})
 	res.status(201).json({
-	  data: image,
+	  data: media,
 	  success: true,
 	  msg: "Upload successfully.",
 	});
