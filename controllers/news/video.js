@@ -1,22 +1,43 @@
 const { Video,Category } = require('../../models/news/Video');
+const Media = require('../../models/Media')
 
 exports.create = async (req,res) => {
 
-	const { title,url,category } = req.body
+	const { title,media,category } = req.body
 
-	if(!title || !url)
+	if(!title || !media)
 		return res.status(406).json({
 		  success: false,
-		  msg: "Title or video cannot be empty.",
+		  msg: "Title or media cannot be empty.",
 		});
 	const video =  await Video.create({
 		title:title,
-		video:url,
+		mediumId: media,
 		userId:req.user.id,
+
 	});
-	await video.addCategory(category, { through: { selfGranted: false } });
+	await video.addCategory(category);
 	res.status(201).json({
 	  success: true,
-	  msg: "News created successfully.",
+	  msg: "Video created successfully.",
 	});
+}
+
+exports.getAll = async(req,res)=>{
+
+	const vdeo = await Video.findAll({
+	  where: {
+	    status: 'active',
+	  },
+	  include:
+	    	{
+	    	 model: Media,
+	    	 attributes: ['path'],
+	    	},
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(vdeo);
+
 }

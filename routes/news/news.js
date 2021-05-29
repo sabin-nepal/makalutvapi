@@ -6,6 +6,7 @@ const { protect } = require('../../middelwares/protect.js')
 const{
 	create,
 	getAll,
+	getByType,
 	getSingle,
 	edit,
 	deletes,
@@ -15,9 +16,10 @@ const{
 }	= require('../../controllers/news/news.js');
 
 
-router.route('/:type').get(getAll);
+router.route('/').get(getAll);
+router.route('/type/:type').get(getByType);
 router.route('/:id').get(getSingle);
-router.route('/edit/:id').post(protect,edit);
+router.route('/:id').post(protect,edit);
 router.route('/create').post(protect,create);
 router.route('/delete/:id').post(protect,deletes);
 router.route('/vote').post(vote);

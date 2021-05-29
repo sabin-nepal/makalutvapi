@@ -90,7 +90,7 @@ exports.deletes = async (req,res) => {
 	await insight.destroy();	
 	res.status(201).json({
 	  success: true,
-	  msg: "News has been deleted successfully.",
+	  msg: "Insight has been deleted successfully.",
 	});	
 
 }
