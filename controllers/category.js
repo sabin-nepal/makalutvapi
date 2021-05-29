@@ -1,8 +1,9 @@
 const Category = require('../models/Category');
+const Media = require('../models/Media') 
 
 exports.create = async (req,res) => {
 
-	const { title,image,type="news" } = req.body
+	const { title,media,type="news" } = req.body
 
 	if(!title)
 		return res.status(406).json({
@@ -11,7 +12,7 @@ exports.create = async (req,res) => {
 		});
 	await Category.create({
 	    title:title,
-	    mediumId:image,
+	    mediumId:media,
 	    userId:req.user.id,
 	    type:type,
 	  });
@@ -24,7 +25,14 @@ exports.create = async (req,res) => {
 
 exports.getAll = async (req,res) => {
 
-	const category = await Category.findAll();
+	const category = await Category.findAll({
+		include:[
+	  	{
+	  	 model: Media,
+	  	 attributes: ['id','path'],
+	  	},
+	  ],
+	});
 	res.status(200).json(category);
 
 }

@@ -25,19 +25,24 @@ exports.create = async (req,res) => {
 
 exports.getAll = async(req,res)=>{
 
-	const vdeo = await Video.findAll({
+	const video = await Video.findAll({
 	  where: {
 	    status: 'active',
 	  },
-	  include:
-	    	{
-	    	 model: Media,
-	    	 attributes: ['path'],
-	    	},
+	  include:[
+	  		{
+	  		 model: Media,
+	  		 attributes: ['path'],
+	  		},	
+	  		{
+	  		 model: Category,
+	  		 attributes: ['id','title'],
+	  		},	
+	  ],	    	
 	  order: [
 	      ['createdAt', 'DESC'],
 	     ] 
 	});
-	res.status(200).json(vdeo);
+	res.status(200).json(video);
 
 }
