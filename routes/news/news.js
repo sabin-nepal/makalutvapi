@@ -19,7 +19,7 @@ const{
 router.route('/').get(getAll);
 router.route('/type/:type').get(getByType);
 router.route('/:id').get(getSingle);
-router.route('/:id').post(protect,edit);
+router.route('/edit/:id').post(protect,edit);
 router.route('/create').post(protect,create);
 router.route('/delete/:id').post(protect,deletes);
 router.route('/vote').post(vote);

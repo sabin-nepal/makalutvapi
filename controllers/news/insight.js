@@ -42,6 +42,28 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(insight);
 }
 
+exports.getLimit = async(req,res) => {
+	const { limit } = req.params;
+	const insight = await Insight.findAll({
+		  where: {
+		    status: 'active'
+		  }, 
+		  limit: Number(limit),
+		  include:[
+		  	{
+		  	 model: Media,
+		  	 attributes: ['id','path'],
+		  	 through: {attributes: []}
+		  	},
+		  ],
+		  order: [
+		      ['createdAt', 'DESC'],
+		     ] 
+		});
+		res.status(200).json(insight);
+
+}
+
 exports.getSingle = async(req,res) => {
 
 	const { id } = req.params;

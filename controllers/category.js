@@ -1,5 +1,5 @@
-const Category = require('../models/Category');
-const Media = require('../models/Media') 
+const { News,Category } = require('../models/news/News');
+const Media = require('../models/Media')
 
 exports.create = async (req,res) => {
 
@@ -21,6 +21,25 @@ exports.create = async (req,res) => {
 	  msg: "Category Created successfully.",
 	});
 	
+}
+
+exports.getAllNews = async (req,res) => {
+	const category = await Category.findAll({
+		include:[
+	  	{
+	  	 model: Media,
+	  	 attributes: ['id','path'],
+	  	},
+	  	{
+	  		model: News,
+			where: {
+	    	   status: 'active'
+	    	 },
+		}
+	  ],
+	});
+	res.status(200).json(category);
+
 }
 
 exports.getAll = async (req,res) => {
