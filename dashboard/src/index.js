@@ -17,6 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
+import { AuthProvider } from './auth/AuthContext';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // core components
