@@ -3,6 +3,15 @@ const app = express()
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./config/makaluServiceAccount.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
 //load env variales
 dotenv.config({
 	path: './config/.env'
@@ -27,17 +36,19 @@ const auth = require("./routes/auth");
 const category = require("./routes/category");
 const news = require("./routes/news/news.js");
 const insight = require("./routes/news/insight.js");
-const poll = require("./routes/news/poll.js");
 const video = require("./routes/news/video");
 const upload = require("./routes/upload");
+const media = require("./routes/media")
+const adv = require("./routes/adv");
 //const upload = require("./routes/upload");
 app.use('/api/v1/auth',auth);
 app.use('/api/v1/category',category);
 app.use('/api/v1/news',news);
 app.use('/api/v1/insight',insight);
-app.use('/api/v1/poll',poll);
 app.use('/api/v1/video',video);
 app.use('/api/v1/upload',upload);
+app.use('/api/v1/media',media);
+app.use('/api/v1/adv',adv);
 
 //app.use('/api/v1/upload',upload);
 

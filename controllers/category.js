@@ -1,9 +1,9 @@
-const Category = require('../models/Category');
+const { News,Category } = require('../models/news/News');
+const Media = require('../models/Media')
 
 exports.create = async (req,res) => {
 
-	const { title,type="news" } = req.body
-	console.log(title)
+	const { title,media,type="news" } = req.body
 
 	if(!title)
 		return res.status(406).json({
@@ -12,6 +12,7 @@ exports.create = async (req,res) => {
 		});
 	await Category.create({
 	    title:title,
+	    mediumId:media,
 	    userId:req.user.id,
 	    type:type,
 	  });
@@ -20,6 +21,39 @@ exports.create = async (req,res) => {
 	  msg: "Category Created successfully.",
 	});
 	
+}
+
+exports.getAllNews = async (req,res) => {
+	const category = await Category.findAll({
+		include:[
+	  	{
+	  	 model: Media,
+	  	 attributes: ['id','path'],
+	  	},
+	  	{
+	  		model: News,
+			where: {
+	    	   status: 'active'
+	    	 },
+		}
+	  ],
+	});
+	res.status(200).json(category);
+
+}
+
+exports.getAll = async (req,res) => {
+
+	const category = await Category.findAll({
+		include:[
+	  	{
+	  	 model: Media,
+	  	 attributes: ['id','path'],
+	  	},
+	  ],
+	});
+	res.status(200).json(category);
+
 }
 
 exports.edit = async (req,res) => {

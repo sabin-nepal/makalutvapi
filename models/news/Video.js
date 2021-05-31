@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const db = require("../../config/db");
 const { User } = require('../User')
 const Category = require("../Category")
+const Media = require("../Media")
 var slugify = require('slugify')
 
 const Video = db.define("video", {
@@ -11,10 +12,8 @@ const Video = db.define("video", {
       defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
-  title: Sequelize.STRING,
-  slug: Sequelize.STRING,
-  video: Sequelize.STRING,
-  thumbnail: Sequelize.STRING,
+  title: Sequelize.TEXT,
+  slug : Sequelize.TEXT,  
   status: {
     type: Sequelize.STRING,
     defaultValue: 'active',
@@ -23,7 +22,10 @@ const Video = db.define("video", {
 
 Video.beforeSave(async function (video) {
   try {
-    const slug = slugify(video.title);
+    const slug = slugify(video.title,{
+            replacement: '-',
+            remove: '?',     
+          });;
     const count = await Video.count({
     		  where: {
     		    title: video.title,
@@ -45,7 +47,12 @@ Video.belongsTo(User, {
     type: Sequelize.UUID
   }
 });
+
+//with media
+Video.belongsTo(Media);
+//with category
 Video.belongsToMany(Category, { through: 'CategoryVideo' });
 Category.belongsToMany(Video, { through: 'CategoryVideo' });
+
 exports.Video = Video;
 exports.Category = Category;
