@@ -74,7 +74,35 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(news);
 }
 
-exports.getByType = async(req,res) => {
+exports.getType = async(req,res) => {
+	const {type} = req.params;
+	const news = await News.findAll({
+	  where: {
+	    status: 'active',
+	    type: type,
+	  },
+	  include: [
+	    	{
+	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
+	    ],
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(news);
+}
+
+exports.getTypeLimit = async(req,res) => {
 	const {type,limit} = req.params;
 	const news = await News.findAll({
 	  where: {
@@ -137,7 +165,7 @@ exports.edit = async (req,res) => {
 	await news.save();
 	res.status(201).json({
 	  success: true,
-	  msg: "News has been deleted successfully.",
+	  msg: "News has been updated successfully.",
 	});	
 }
 
@@ -151,7 +179,7 @@ exports.deletes = async (req,res) => {
 	await news.destroy();	
 	res.status(201).json({
 	  success: true,
-	  msg: "News has been updated successfully.",
+	  msg: "News has been deleted successfully.",
 	});	
 
 }

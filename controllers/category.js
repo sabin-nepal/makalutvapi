@@ -35,7 +35,7 @@ exports.getAllNews = async (req,res) => {
 	  		include:[{
 	  			model: Media,
 	  			attributes: ['id','path'],
-	  		}]
+	  		}],
 			where: {
 	    	   status: 'active'
 	    	 },
