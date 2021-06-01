@@ -32,6 +32,10 @@ exports.getAllNews = async (req,res) => {
 	  	},
 	  	{
 	  		model: News,
+	  		include:[{
+	  			model: Media,
+	  			attributes: ['id','path'],
+	  		}]
 			where: {
 	    	   status: 'active'
 	    	 },

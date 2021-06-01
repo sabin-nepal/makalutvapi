@@ -12,4 +12,4 @@ const{
 // router.route('/:id').get(getSingle);
 router.route('/create').post(protect,create);
 //router.route('/delete/:id').post(protect,deletes);
-module.exports = router; 
+module.exports = router;

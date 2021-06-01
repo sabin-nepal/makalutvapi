@@ -75,12 +75,13 @@ exports.getAll = async(req,res) => {
 }
 
 exports.getByType = async(req,res) => {
-	const type = req.params.type;
+	const {type,limit} = req.params;
 	const news = await News.findAll({
 	  where: {
 	    status: 'active',
 	    type: type,
 	  },
+	  limit: Number(limit),
 	  include: [
 	    	{
 	    	 model: Category,
@@ -184,10 +185,10 @@ exports.getCategoryNews = async (req,res) => {
 
 exports.vote = async(req,res) => {
 
-	const { choice,newsId } = req.body;
+	const { choice } = req.body;
 	const pollResult = await PollResult.findOne({
 		where:{
-			newsId:newsId,
+			newsId:req.params.id,
 		}
 	});
 	if(!pollResult)
@@ -201,9 +202,7 @@ exports.vote = async(req,res) => {
 		pollResult.noCount++; 
 
 	await pollResult.save();
-	res.status(201).json({
-	  msg: "Voted successfully.",
-	});
+	res.status(201).json(pollResult);
 }
 
 exports.getVoteResult = async(req,res) => {
