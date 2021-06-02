@@ -3,16 +3,15 @@ const Media = require('../models/Media');
 exports.upload = async (req,res) => {
 
 	let url;
-	console.log(req.files.fieldname)
-	if(req.files)
-		 url = `${process.env.UPLOAD_URL}${req.files.fieldname}s/${req.files.filename}`	
-	const media = await Media.create({
+	if(req.file)
+		 url = `${process.env.UPLOAD_URL}${req.file.fieldname}s/${req.file.filename}`
+	const image = await Media.create({
 		path:url,
 		userId:req.user.id,
-		type: req.files.fieldname
+		type: req.file.fieldname
 	});	
 	res.status(201).json({
-	  data: media.id,
+	  data: image.id,
 	  success: true,
 	  msg: "Upload successfully.",
 	});
@@ -21,14 +20,19 @@ exports.upload = async (req,res) => {
 exports.uploads = async(req,res) =>  {
 	let media = [];
 	let data = [];
+	let fieldname;
 	if(req.files)
 		req.files.forEach((file)=>{
-			const url = `${process.env.UPLOAD_URL}${file.fieldname}s/${file.filename}`
+			if(file.mimetype="video/mp4")
+				fieldname = 'video';
+			else
+				fieldname = 'thumbnail';
+			const url = `${process.env.UPLOAD_URL}${fieldname}s/${file.filename}`
 			var set =
 			{
 				'path':url,
 				'userId':req.user.id,
-				'type': file.fieldname
+				'type': fieldname
 			}
 			data.push(set);
 		})
