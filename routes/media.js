@@ -23,7 +23,7 @@ router.route('/delete/:id').post(protect,deletes);
 
 //router.route('/upload').post(protect,imageUpload.single('thumbnail'),upload);
 router.route('/upload').post(protect,imageUpload.array('thumbnail'),uploads);
-router.route('/upload/video').post(protect,videoUpload.array('video'),upload);
+router.route('/upload/video').post(protect,videoUpload.array('video'),uploads);
 
 
 module.exports = router; 

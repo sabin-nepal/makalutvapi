@@ -13,7 +13,7 @@ const Video = db.define("video", {
       allowNull: false,
     },
   title: Sequelize.TEXT,
-  slug : Sequelize.TEXT,  
+  slug : Sequelize.TEXT,
   status: {
     type: Sequelize.STRING,
     defaultValue: 'active',
@@ -49,7 +49,19 @@ Video.belongsTo(User, {
 });
 
 //with media
-Video.belongsTo(Media);
+Video.belongsTo(Media,{
+  as : 'media',
+  foreignKey: {
+    name: 'videoId'
+  }
+  });
+Video.belongsTo(Media,{
+  as : 'thumbnail',
+  foreignKey: {
+    name: 'thumbnailId'
+  }
+  }
+);
 //with category
 Video.belongsToMany(Category, { through: 'CategoryVideo' });
 Category.belongsToMany(Video, { through: 'CategoryVideo' });

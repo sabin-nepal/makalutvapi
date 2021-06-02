@@ -3,15 +3,16 @@ const Media = require('../models/Media');
 exports.upload = async (req,res) => {
 
 	let url;
-	if(req.file)
-		 url = `${process.env.UPLOAD_URL}${req.file.fieldname}s/${req.file.filename}`
-	const image = await Media.create({
+	console.log(req.files.fieldname)
+	if(req.files)
+		 url = `${process.env.UPLOAD_URL}${req.files.fieldname}s/${req.files.filename}`	
+	const media = await Media.create({
 		path:url,
 		userId:req.user.id,
-		type: req.file.fieldname
+		type: req.files.fieldname
 	});	
 	res.status(201).json({
-	  data: image.id,
+	  data: media.id,
 	  success: true,
 	  msg: "Upload successfully.",
 	});

@@ -3,7 +3,7 @@ const Media = require('../../models/Media')
 
 exports.create = async (req,res) => {
 
-	const { title,media,category } = req.body
+	const { title,media,category,thumbnail } = req.body
 
 	if(!title || !media)
 		return res.status(406).json({
@@ -12,7 +12,8 @@ exports.create = async (req,res) => {
 		});
 	const video =  await Video.create({
 		title:title,
-		mediumId: media,
+		videoId: media,
+		thumbnailId: thumbnail,
 		userId:req.user.id,
 
 	});
@@ -32,6 +33,12 @@ exports.getAll = async(req,res)=>{
 	  include:[
 	  		{
 	  		 model: Media,
+	  		 as: 'thumbnail',
+	  		 attributes: ['path'],
+	  		},
+	  		{
+	  		 model: Media,
+	  		 as: 'media',
 	  		 attributes: ['path'],
 	  		},	
 	  		{
@@ -48,7 +55,7 @@ exports.getAll = async(req,res)=>{
 }
 
 exports.edit = async (req,res) => {
-	const { title,media,category } = req.body
+	const { title,media,category,thumbnail } = req.body
 	const video = await Video.findByPk(req.params.id);
 	if(!video)
 		return res.status(401).json({
@@ -56,12 +63,13 @@ exports.edit = async (req,res) => {
 		  msg: "Unauthorized.",
 		});
 	await video.removeCategory(video.categories)
-	adv.title = title
-	adv.mediumId = media
-	await adv.addCategory(category);
-	await adv.save();
+	video.title = title
+	video.videoId = media
+	video.thumbnailId = thumbnail
+	await video.addCategory(category);
+	await video.save();
 	res.status(201).json({
-	  msg: "Advertisement has been updated successfully.",
+	  msg: "Video has been updated successfully.",
 	});	
 }
 
