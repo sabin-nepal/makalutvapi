@@ -46,3 +46,18 @@ exports.getAll = async(req,res)=>{
 	res.status(200).json(video);
 
 }
+
+exports.deletes = async (req,res) => {
+
+	const video = await Video.findByPk(req.params.id);
+	if(!video)
+		return res.status(401).json({
+		  success: false,
+		  msg: "Unauthorized.",
+		});
+	await video.destroy();	
+	res.status(201).json({
+	  msg: "Video has been deleted successfully.",
+	});	
+
+}
