@@ -47,6 +47,25 @@ exports.getAll = async(req,res)=>{
 
 }
 
+exports.edit = async (req,res) => {
+	const { title,media,category } = req.body
+	const video = await Video.findByPk(req.params.id);
+	if(!video)
+		return res.status(401).json({
+		  success: false,
+		  msg: "Unauthorized.",
+		});
+	await video.removeCategory(video.categories)
+	adv.title = title
+	adv.mediumId = media
+	await adv.addCategory(category);
+	await adv.save();
+	res.status(201).json({
+	  msg: "Advertisement has been updated successfully.",
+	});	
+}
+
+
 exports.deletes = async (req,res) => {
 
 	const video = await Video.findByPk(req.params.id);
