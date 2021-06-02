@@ -21,7 +21,8 @@ router.route('/delete/:id').post(protect,deletes);
 
 //upload
 
-router.route('/upload/video').post(protect,videoUpload.array('video'),uploads);
+//router.route('/upload').post(protect,imageUpload.single('thumbnail'),upload);
+router.route('/upload').post(protect,media.array('media'),upload);
 
 
 module.exports = router; 

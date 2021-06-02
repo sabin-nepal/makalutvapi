@@ -1,23 +1,7 @@
 const Media = require('../models/Media');
 
-exports.upload = async (req,res) => {
 
-	let url;
-	if(req.file)
-		 url = `${process.env.UPLOAD_URL}${req.file.fieldname}s/${req.file.filename}`
-	const image = await Media.create({
-		path:url,
-		userId:req.user.id,
-		type: req.file.fieldname
-	});	
-	res.status(201).json({
-	  data: image.id,
-	  success: true,
-	  msg: "Upload successfully.",
-	});
-}
-
-exports.uploads = async(req,res) =>  {
+exports.upload = async(req,res) =>  {
 	let media = [];
 	let data = [];
 	let fieldname;
