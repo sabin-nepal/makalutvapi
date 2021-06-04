@@ -37,7 +37,6 @@ const category = require("./routes/category");
 const news = require("./routes/news/news.js");
 const insight = require("./routes/news/insight.js");
 const video = require("./routes/news/video");
-const upload = require("./routes/upload");
 const media = require("./routes/media")
 const adv = require("./routes/adv");
 //const upload = require("./routes/upload");
@@ -46,7 +45,6 @@ app.use('/api/v1/category',category);
 app.use('/api/v1/news',news);
 app.use('/api/v1/insight',insight);
 app.use('/api/v1/video',video);
-app.use('/api/v1/upload',upload);
 app.use('/api/v1/media',media);
 app.use('/api/v1/adv',adv);
 

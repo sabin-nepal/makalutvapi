@@ -14,8 +14,8 @@ const Adv = db.define("advertisement", {
   startDate:Sequelize.DATE,
   endDate:Sequelize.DATE,
   status: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: true,
+    type: Sequelize.STRING,
+    defaultValue: 'active',
   },
 });
 

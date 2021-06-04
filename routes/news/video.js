@@ -5,12 +5,14 @@ const { protect } = require('../../middelwares/protect.js')
 
 const{
 	create,
+	edit,
 	getAll,
+	deletes,
 }	= require('../../controllers/news/video.js');
 
 
 router.route('/').get(getAll);
-// router.route('/:id').get(getSingle);
 router.route('/create').post(protect,create);
-//router.route('/delete/:id').post(protect,deletes);
+router.route('/edit/:id').post(protect,edit);
+router.route('/delete/:id').post(protect,deletes);
 module.exports = router; 

@@ -6,7 +6,8 @@ const { protect } = require('../../middelwares/protect.js')
 const{
 	create,
 	getAll,
-	getByType,
+	getTypeLimit,
+	getType,
 	getSingle,
 	edit,
 	deletes,
@@ -17,7 +18,8 @@ const{
 
 
 router.route('/').get(getAll);
-router.route('/type/:type').get(getByType);
+router.route('/type/:type').get(getType);
+router.route('/type/:type/:limit').get(getTypeLimit);
 router.route('/:id').get(getSingle);
 router.route('/edit/:id').post(protect,edit);
 router.route('/create').post(protect,create);

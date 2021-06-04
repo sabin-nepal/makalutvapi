@@ -74,13 +74,42 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(news);
 }
 
-exports.getByType = async(req,res) => {
-	const type = req.params.type;
+exports.getType = async(req,res) => {
+	const {type} = req.params;
 	const news = await News.findAll({
 	  where: {
 	    status: 'active',
 	    type: type,
 	  },
+	  include: [
+	    	{
+	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
+	    ],
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(news);
+}
+
+exports.getTypeLimit = async(req,res) => {
+	const {type,limit} = req.params;
+	const news = await News.findAll({
+	  where: {
+	    status: 'active',
+	    type: type,
+	  },
+	  limit: Number(limit),
 	  include: [
 	    	{
 	    	 model: Category,
@@ -136,7 +165,7 @@ exports.edit = async (req,res) => {
 	await news.save();
 	res.status(201).json({
 	  success: true,
-	  msg: "News has been deleted successfully.",
+	  msg: "News has been updated successfully.",
 	});	
 }
 
@@ -150,7 +179,7 @@ exports.deletes = async (req,res) => {
 	await news.destroy();	
 	res.status(201).json({
 	  success: true,
-	  msg: "News has been updated successfully.",
+	  msg: "News has been deleted successfully.",
 	});	
 
 }
@@ -184,10 +213,10 @@ exports.getCategoryNews = async (req,res) => {
 
 exports.vote = async(req,res) => {
 
-	const { choice,newsId } = req.body;
+	const { choice } = req.body;
 	const pollResult = await PollResult.findOne({
 		where:{
-			newsId:newsId,
+			newsId:req.params.id,
 		}
 	});
 	if(!pollResult)
@@ -201,9 +230,7 @@ exports.vote = async(req,res) => {
 		pollResult.noCount++; 
 
 	await pollResult.save();
-	res.status(201).json({
-	  msg: "Voted successfully.",
-	});
+	res.status(201).json(pollResult);
 }
 
 exports.getVoteResult = async(req,res) => {
