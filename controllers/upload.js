@@ -7,7 +7,7 @@ exports.upload = async(req,res) =>  {
 	let fieldname;
 	if(req.files)
 		req.files.forEach((file)=>{
-			if(file.mimetype="video/mp4")
+			if(file.mimetype=="video/mp4")
 				fieldname = 'video';
 			else
 				fieldname = 'thumbnail';

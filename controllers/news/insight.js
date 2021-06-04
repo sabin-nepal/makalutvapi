@@ -3,7 +3,7 @@ const Media = require('../../models/Media')
 
 exports.create = async (req,res) => {
 
-	const { media,category,status} = req.body
+	const { media,category,status,background} = req.body
 	if(!media)
 		return res.status(406).json({
 		  success: false,
@@ -11,6 +11,7 @@ exports.create = async (req,res) => {
 		});
 	const insight =  await Insight.create({
 		status:status,
+		backgroundId: background,
 		userId:req.user.id,
 	});
 	await insight.addMedia(media);
@@ -31,6 +32,12 @@ exports.getAll = async(req,res) => {
 	  include:[
 	  	{
 	  	 model: Media,
+	  	 as: 'background',
+	  	 attributes: ['id','path'],
+	  	},
+	  	{
+	  	 model: Media,
+	  	 as: 'media',
 	  	 attributes: ['id','path'],
 	  	 through: {attributes: []}
 	  	},
@@ -52,6 +59,7 @@ exports.getLimit = async(req,res) => {
 		  include:[
 		  	{
 		  	 model: Media,
+		  	 as:'media',
 		  	 attributes: ['id','path'],
 		  	 through: {attributes: []}
 		  	},
@@ -74,7 +82,7 @@ exports.getSingle = async(req,res) => {
 }
 
 exports.edit = async (req,res) => {
-	const { media,category,status} = req.body
+	const { media,category,status,background} = req.body
 	const insight = await Insight.findByPk(req.params.id,{
 			include: [
 		    	{
@@ -93,6 +101,7 @@ exports.edit = async (req,res) => {
 	await insight.removeCategory(insight.categories)
 	await insight.removeMedia(insight.media)
 	insight.status = status
+	insight.background = background
 	await insight.addCategory(category);
 	await insight.addMedia(media);
 	await insight.save();

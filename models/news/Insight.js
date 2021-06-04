@@ -19,7 +19,8 @@ const Insight = db.define("insight", {
  
 });
 Insight.belongsTo(User);
-Insight.belongsToMany(Media,{ through: 'InsightMedia' });
+Insight.belongsTo(Media,{ as:'background'})
+Insight.belongsToMany(Media,{ as:'media',through: 'InsightMedia' });
 Media.belongsToMany(Insight,{ through: 'InsightMedia'});
 Insight.belongsToMany(Category, { through: 'CategoryInsight' });
 Category.belongsToMany(Insight, { through: 'CategoryInsight' });
