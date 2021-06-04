@@ -22,6 +22,12 @@ exports.login = async(req,res) => {
 	  });
 
 	const isPassMatched = await user.isValidPassword(password);
+	if(!isPassMatched){
+		return res.status(404).json({
+		  data: null,
+		  msg: "Wrong Password!!",
+		});
+	}
 	const token = user.getJwtSignedToken();
 	res.status(200).json({
 	  data: token,
