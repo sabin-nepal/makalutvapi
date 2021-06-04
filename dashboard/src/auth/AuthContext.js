@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { Component, createContext } from "react";
+import PropTypes from "prop-types";
+export const UserContext = createContext({ user: null });
+class UserProvider extends Component {
+  state = {
+    user: null,
+  };
 
-const AuthContext = React.createContext();
-
-class AuthProvider extends React.Component {  
-    state = { isAuth: false }
-    render() {    
-        return (     
-            <AuthContext.Provider value={{ isAuth: this.state.isAuth }} >{this.props.children}</AuthContext.Provider>    
-        )  
-    }
+  componentDidMount = () => {
+    window.addEventListener("storage", () => {
+      const auth = localStorage.getItem("mk__auth");
+      this.setState({ user: auth });
+    });
+  };
+  render() {
+    return (
+      <UserContext.Provider value={this.state.user}>
+        {this.props.children}
+      </UserContext.Provider>
+    );
+  }
 }
-
-const AuthConsumer = AuthContext.Consumer
-
-export { AuthProvider, AuthConsumer }
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+export default UserProvider;
