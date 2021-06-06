@@ -1,8 +1,6 @@
 const Adv = require('../models/Adv');
 const Category = require('../models/Category')
 const Media = require('../models/Media')
-const { News } = require('../models/news/News')
-const PollResult = require('../models/news/PollResult')
 exports.create = async (req,res) => {
 
 	const { title,media,startDate,endDate,status,type='banner'} = req.body
@@ -106,7 +104,7 @@ exports.edit = async (req,res) => {
 	adv.endDate = endDate
 	adv.status = status
 	adv.type = type
-	await news.save();
+	await adv.save();
 	//await adv.addMedia(media);
 	res.status(201).json({
 	  msg: "Advertisement has been updated successfully.",
