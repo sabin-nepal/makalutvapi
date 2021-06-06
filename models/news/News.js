@@ -17,6 +17,7 @@ const News = db.define("news", {
   slug:  Sequelize.TEXT,
   content: Sequelize.TEXT,
   excerpt: Sequelize.TEXT,
+  pollTitle: Sequelize.STRING,
   endDate: Sequelize.DATE,
   type: {
     type: Sequelize.STRING,

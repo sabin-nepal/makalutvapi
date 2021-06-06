@@ -6,7 +6,7 @@ const { sendNotification } = require('../../helpers/notification.js')
 
 exports.create = async (req,res) => {
 	var notifyImage;
-	const { title, content, type='news', excerpt,thumbnail,media,category,status} = req.body
+	const { title, content, type='news', excerpt,thumbnail,media,category,status,pollTitle} = req.body
 	if(!title || !content || !media)
 		return res.status(406).json({
 		  success: false,
@@ -19,9 +19,9 @@ exports.create = async (req,res) => {
 	// 	  msg: "Thumbnail Required.",
 	// 	});
 	// }
+	notifyImage = media;
 	if(thumbnail)
 		notifyImage = thumbnail;
-	notifyImage = media;
 	notifyImage = await getThumbnail(notifyImage);
 	const news =  await News.create({
 		title:title,
@@ -29,6 +29,7 @@ exports.create = async (req,res) => {
 		excerpt:excerpt,
 		status:status,
 		type:type,
+		pollTitle: pollTitle,
 		userId:req.user.id,
 	});
 	await news.addCategory(category, { through: { selfGranted: false } });
@@ -141,7 +142,7 @@ exports.getSingle = async(req,res) => {
 }
 
 exports.edit = async (req,res) => {
-	const { title, content, excerpt,media,category,status,type='news'} = req.body
+	const { title, content, excerpt,media,category,status,type='news',pollTitle} = req.body
 	const news = await News.findByPk(req.params.id,{
 			include: [
 		    	{
@@ -160,6 +161,7 @@ exports.edit = async (req,res) => {
 	news.content = content
 	news.excerpt = excerpt
 	news.status = status
+	news.pollTitle = pollTitle
 	await news.addCategory(category, { through: { selfGranted: false } });
 	await news.addMedia(media, { through: { selfGranted: false } });
 	await news.save();

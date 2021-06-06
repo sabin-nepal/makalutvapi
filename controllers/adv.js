@@ -1,9 +1,11 @@
 const Adv = require('../models/Adv');
-const category = require('../models/Category')
+const Category = require('../models/Category')
 const Media = require('../models/Media')
+const { News } = require('../models/news/News')
+const PollResult = require('../models/news/PollResult')
 exports.create = async (req,res) => {
 
-	const { title,media,startDate,endDate,status} = req.body
+	const { title,media,startDate,endDate,status,type='banner'} = req.body
 	if(!startDate || !endDate)
 		return res.status(406).json({
 		  success: false,
@@ -14,6 +16,7 @@ exports.create = async (req,res) => {
 		mediumId:media,
 		status:status,
 		startDate:startDate,
+		type:type,
 		endDate:endDate,
 		userId:req.user.id,
 	});
@@ -60,17 +63,36 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(adv);
 }
 
-exports.getSingle = async(req,res) => {
-
-	const { id } = req.params;
-	const adv = await Adv.findByPk(id);
-	if(!adv)
-		return res.status(204).json();
+exports.getByType = async(req,res) => {
+	const adv = await Adv.findAll({
+	  where: {
+	    status: 'active',
+	    type: req.params.type,
+	  },
+	  include: [
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	},
+	    ], 
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
 	res.status(200).json(adv);
 }
 
+// exports.getSingle = async(req,res) => {
+
+// 	const { id } = req.params;
+// 	const adv = await Adv.findByPk(id);
+// 	if(!adv)
+// 		return res.status(204).json();
+// 	res.status(200).json(adv);
+// }
+
 exports.edit = async (req,res) => {
-	const { title,media,startDate,endDate,status} = req.body
+	const { title,media,startDate,endDate,status,type} = req.body
 	const adv = await Adv.findByPk(req.params.id);
 	if(!adv)
 		return res.status(401).json({
@@ -83,6 +105,7 @@ exports.edit = async (req,res) => {
 	adv.startDate = startDate
 	adv.endDate = endDate
 	adv.status = status
+	adv.type = type
 	await news.save();
 	//await adv.addMedia(media);
 	res.status(201).json({
