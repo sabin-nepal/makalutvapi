@@ -1,29 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { UserContext } from "./auth/AuthContext";
-import PropTypes from "prop-types";
+//import { UserContext } from "./auth/AuthContext";
+//import PropTypes from "prop-types";
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const auth = useContext(UserContext);
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  useEffect(() => {
-    if (auth) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, [auth]);
+  //   const auth = useContext(UserContext);
+  //   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  //   useEffect(() => {
+  //     console.log(auth, isAuthenticated);
+  //     if (auth != null) {
+  //       setIsAuthenticated(true);
+  //     } else {
+  //       console.log("hello", isAuthenticated);
+  //       setIsAuthenticated(false);
+  //     }
+  //   }, []);
 
-  if (isAuthenticated === null) {
-    return <></>;
-  }
-
+  //   if (!isAuthenticated) {
+  //     console.log(isAuthenticated);
+  //     return <Redirect to="/admin/login" />;
+  //   }
   return (
     <Route
       {...rest}
       render={(props) =>
-        !isAuthenticated ? (
+        !localStorage.getItem("token") ? (
           <Redirect to="/admin/login" />
         ) : (
           <Component {...props} />
@@ -31,8 +33,5 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       }
     />
   );
-};
-PrivateRoute.PropTypes = {
-  component: PropTypes.node.isRequired,
 };
 export default PrivateRoute;
