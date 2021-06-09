@@ -14,6 +14,7 @@ const{
 	getCategoryNews,
 	vote,
 	getVoteResult,
+	getSearchResult,
 }	= require('../../controllers/news/news.js');
 
 
@@ -27,4 +28,5 @@ router.route('/delete/:id').post(protect,deletes);
 router.route('/vote/:id').post(vote);
 router.route('/vote/:id').get(getVoteResult);
 router.route('/category/:id').get(getCategoryNews);
+router.route('/search/:s').get(getSearchResult);
 module.exports = router; 

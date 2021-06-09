@@ -3,6 +3,7 @@ const Media = require('../../models/Media')
 const PollResult = require('../../models/news/PollResult')
 const { getThumbnail } = require('../media')
 const { sendNotification } = require('../../helpers/notification.js')
+const { Op } = require("sequelize");
 
 exports.create = async (req,res) => {
 	var notifyImage;
@@ -258,4 +259,34 @@ exports.getVoteResult = async(req,res) => {
 		});
 	res.status(200).json(pollResult);
 
+}
+
+exports.getSearchResult = async(req,res) => {
+	const {s} = req.params;
+	const news = await News.findAll({
+	  where: {
+	    status: 'active',
+	    [Op.or]: [
+	          { 'title': { [Op.like]: '%' + s + '%' } },
+	        ]
+	  },
+	  include: [
+	    	{
+	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
+	    ], 
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(news);	
 }
