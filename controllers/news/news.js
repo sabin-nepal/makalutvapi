@@ -75,7 +75,7 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(news);
 }
 
-exports.getType = async(req,res) => {
+const getAllNewsByType = exports.getType = async(req,res) => {
 	const {type} = req.params;
 	const news = await News.findAll({
 	  where: {
@@ -103,33 +103,39 @@ exports.getType = async(req,res) => {
 	res.status(200).json(news);
 }
 
+
 exports.getTypeLimit = async(req,res) => {
 	const {type,limit} = req.params;
-	const news = await News.findAll({
-	  where: {
-	    status: 'active',
-	    type: type,
-	  },
-	  limit: Number(limit),
-	  include: [
-	    	{
-	    	 model: Category,
-	    	 through: {attributes: []}
-	    	},
-	    	{
-	    	 model: Media,
-	    	 attributes: ['id','path','type'],
-	    	 through: {attributes: []}
-	    	},
-	    	{
-	    	 model: PollResult,
-	    	} 
-	    ],
-	  order: [
-	      ['createdAt', 'DESC'],
-	     ] 
-	});
-	res.status(200).json(news);
+	if(Number(limit)===-1){
+		await getAllNewsByType(req,res);
+	}
+	else{
+		const news = await News.findAll({
+		  where: {
+		    status: 'active',
+		    type: type,
+		  },
+		  limit: Number(limit),
+		  include: [
+		    	{
+		    	 model: Category,
+		    	 through: {attributes: []}
+		    	},
+		    	{
+		    	 model: Media,
+		    	 attributes: ['id','path','type'],
+		    	 through: {attributes: []}
+		    	},
+		    	{
+		    	 model: PollResult,
+		    	} 
+		    ],
+		  order: [
+		      ['createdAt', 'DESC'],
+		     ] 
+		});
+		res.status(200).json(news);	
+	}	
 }
 
 exports.getSingle = async(req,res) => {
