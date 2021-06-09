@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
-import { UserContext } from "../../auth/AuthContext";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Checkbox from "@material-ui/core/Checkbox";
 // import Link from "@material-ui/core/Link";
@@ -37,13 +37,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+  const history = useHistory();
   const classes = useStyles();
-  const user = useContext(UserContext);
   const [uEmail, setEmail] = useState("");
   const [uPass, setPassword] = useState("");
   const [btnLoading, setBtnLoading] = useState(0);
   const [lError, setError] = useState(null);
-  console.log(user);
+  const token = localStorage.getItem("token");
+  console.log(token);
+  useEffect(() => {
+    if (token !== null) {
+      console.log(token);
+      history.push("/");
+    }
+  }, [token]);
   const handleSignIn = async (event) => {
     setError(null);
     event.preventDefault();
@@ -66,10 +73,12 @@ export default function Login() {
       const { data } = await axios(config);
       console.log(data);
       setBtnLoading(0);
+      const randNum = Math.random();
+      localStorage.setItem("token", randNum);
+      history.push("/dashboard");
     } catch (error) {
       setBtnLoading(0);
-      const { data } = error.response;
-      setError(data.msg);
+      //const { data } = error.response;
     }
   };
   const onChangeHandler = (event) => {
