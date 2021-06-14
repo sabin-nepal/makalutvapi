@@ -1,19 +1,19 @@
 
 var admin = require("firebase-admin");
 
-exports.sendNotification = async(topics,title,content,image,type)=>{
-	for(const topic in topics){
+exports.sendNotification = async(topics,title,content,image,id)=>{
+	for(const i in topics){
+		var topic = topics[i];
 		const message = {
-		  data: {
-		    title:title,
-		    content:content,
-		    image:image,
-		    type:type,
-		  },
-		  topic: '/topics/'+topics[topic]
-		};
-		const response = admin.messaging().send(message)
-		console.log(response)
+			  notification: {
+			    title:title,
+			  },
+			  data: {
+			  	click_action: "FLUTTER_NOTIFICATION_CLICK",
+			    id:'7a327fca-3dbe-43b1-8f9e-b21d36c27cf9',
+			  },
+			};
+		const response = await admin.messaging().sendToTopic(topic,message)
 		return response;  
 	}
 }

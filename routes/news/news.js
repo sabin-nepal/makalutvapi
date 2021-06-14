@@ -27,6 +27,6 @@ router.route('/create').post(protect,create);
 router.route('/delete/:id').post(protect,deletes);
 router.route('/vote/:id').post(vote);
 router.route('/vote/:id').get(getVoteResult);
-router.route('/category/:id').get(getCategoryNews);
+router.route('/category/:id/:limit').get(getCategoryNews);
 router.route('/search/:s').get(getSearchResult);
-module.exports = router; 
+module.exports = router;

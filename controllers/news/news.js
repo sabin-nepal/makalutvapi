@@ -43,7 +43,7 @@ exports.create = async (req,res) => {
 		})
 	}
 	if(category)
-		await sendNotification(category,title,content,notifyImage,type);
+		await sendNotification(category,title,content,notifyImage,news.id);
 	res.status(201).json({
 	  success: true,
 	  msg: `${type} created successfully.`,
@@ -201,16 +201,21 @@ exports.getCategoryNews = async (req,res) => {
 		where: {
     	   status: 'active'
     	 },
+    	 limit: Number(req.params.limit),
     	 order: [
     	     ['createdAt', 'DESC'],
     	    ],
 		include: [
 	    	{
 	    	 model: Category,
-	    	 attributes: ['title'],
 	    	 where: {
 	    	   id: req.params.id
 	    	 },
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
 	    	 through: {attributes: []}
 	    	},
 	    ]
