@@ -10,7 +10,7 @@ exports.sendNotification = async(topics,title,content,image,id)=>{
 			  },
 			  data: {
 			  	click_action: "FLUTTER_NOTIFICATION_CLICK",
-			    id:'7a327fca-3dbe-43b1-8f9e-b21d36c27cf9',
+			    id:id,
 			  },
 			};
 		const response = await admin.messaging().sendToTopic(topic,message)
