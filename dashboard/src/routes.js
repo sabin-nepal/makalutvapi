@@ -22,6 +22,8 @@ import Dashboard from "@material-ui/icons/Dashboard";
 // import Notifications from "@material-ui/icons/Notifications";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
+
+import NewsPage from "views/News/News.js";
 // import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
 // import Maps from "views/Maps/Maps.js";
@@ -35,6 +37,13 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
+    layout: "/admin",
+  },
+  {
+    path: "/news",
+    name: "News",
+    icon: Dashboard,
+    component: NewsPage,
     layout: "/admin",
   },
   // {
