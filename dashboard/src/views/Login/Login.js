@@ -71,12 +71,13 @@ export default function Login() {
     };
     try {
       const { data } = await axios(config);
-      console.log(data);
+      console.log(data.data);
       setBtnLoading(0);
-      const randNum = Math.random();
-      localStorage.setItem("token", randNum);
+      //const randNum = Math.random();
+      localStorage.setItem("token", data.data);
       history.push("/dashboard");
     } catch (error) {
+      setError("Inavlid email address/password");
       setBtnLoading(0);
       //const { data } = error.response;
     }

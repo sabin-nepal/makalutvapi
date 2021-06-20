@@ -46,14 +46,14 @@ export default function News() {
   const classes = useStyles();
   const history = useHistory();
   function handleClick() {
-    history.push("/news/add-news");
+    history.push("/admin/news/add");
   }
   return (
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Button fullWidth color="primary" onClick={() => handleClick()}>
-            Top Left
+            Add News
           </Button>
         </GridItem>
       </GridContainer>
