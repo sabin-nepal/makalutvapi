@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 // react plugin for creating charts
 // import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -45,9 +46,27 @@ const useStyles = makeStyles(styles);
 export default function News() {
   const classes = useStyles();
   const history = useHistory();
+  let _tableData = [];
+  const [news, setNews] = useState([]);
   function handleClick() {
     history.push("/admin/news/add");
   }
+  useEffect(() => {
+    getAllNews();
+  }, []);
+  const getAllNews = async () => {
+    const response = await axios.get("/news");
+    let data;
+    var i = 1;
+    response.data.map((getNews) => {
+      var category =
+        getNews.categories[0] !== undefined ? getNews.categories[0].title : "";
+      data = ["" + i, getNews.title, category, "Edit", "delete"];
+      _tableData.push(data);
+      i++;
+    });
+    setNews(_tableData);
+  };
   return (
     <div>
       <GridContainer>
@@ -66,13 +85,8 @@ export default function News() {
             <CardBody>
               <Table
                 tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Salary", "Country"]}
-                tableData={[
-                  ["1", "Dakota Rice", "$36,738", "Niger"],
-                  ["2", "Minerva Hooper", "$23,789", "Curaçao"],
-                  ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
-                  ["4", "Philip Chaney", "$38,735", "Korea, South"],
-                ]}
+                tableHead={["ID", "Name", "Category", "Edit", "Delete"]}
+                tableData={news}
               />
             </CardBody>
           </Card>
