@@ -24,6 +24,7 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 
 import NewsPage from "views/News/News.js";
+import CategoryPage from "views/Category/Category.js";
 // import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
 // import Maps from "views/Maps/Maps.js";
@@ -37,6 +38,13 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
+    layout: "/admin",
+  },
+  {
+    path: "/category",
+    name: "Category",
+    icon: Dashboard,
+    component: CategoryPage,
     layout: "/admin",
   },
   {
