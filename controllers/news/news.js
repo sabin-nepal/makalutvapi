@@ -162,6 +162,11 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
+	if(!title || !content || !media)
+		return res.status(406).json({
+		  success: false,
+		  msg: "Title , content or media cannot be empty.",
+		});
 	await news.removeCategory(news.categories)
 	await news.removeMedia(news.media)
 	news.title = title

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
+import TablePagination from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,7 +17,10 @@ export default function CustomTable(props) {
   const { tableHead, tableData, tableHeaderColor } = props;
   return (
     <div className={classes.tableResponsive}>
-      <Table className={classes.table}>
+      <TablePagination
+        rowsPerPageOptions={[10, 50, { value: -1, label: "All" }]}
+        className={classes.table}
+      >
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
             <TableRow className={classes.tableHeadRow}>
@@ -49,7 +52,7 @@ export default function CustomTable(props) {
             );
           })}
         </TableBody>
-      </Table>
+      </TablePagination>
     </div>
   );
 }

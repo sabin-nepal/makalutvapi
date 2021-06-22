@@ -12,8 +12,9 @@ const{
 }	= require('../controllers/category.js');
 
 router.route('/create').post(protect,create);
-router.route('/').get(getAll);
+router.route('/:type/:limit').get(getAll);
 router.route('/news').get(getAllNews);
-
+router.route('/edit/:id').get(edit);
+router.route('/delete/:id').get(deletes);
 
 module.exports = router; 
