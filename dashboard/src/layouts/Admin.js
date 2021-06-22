@@ -13,6 +13,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
 import Login from "../views/Login/Login.js";
+import AddNews from "../views/News/Add.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -35,8 +36,9 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Route path="/admin/login" component={Login} />
+    <Route exact path="/admin/login" component={Login} />
     <Redirect from="/admin" to="/admin/login" />
+    <PrivateRoute exact path="/admin/add-news" component={AddNews} />
   </Switch>
 );
 
