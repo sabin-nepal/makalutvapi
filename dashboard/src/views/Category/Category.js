@@ -48,14 +48,14 @@ export default function Category() {
   const history = useHistory();
   let _tableData = [];
   const [categories, setCategories] = useState([]);
-  function handleClick() {
-    history.push("/admin/add-category");
+  function handleClick(value) {
+    history.push(value);
   }
   useEffect(() => {
     getAllCategory();
   }, []);
   const getAllCategory = async () => {
-    const response = await axios.get("/category");
+    const response = await axios.get("/category/all/-1");
     let data;
     response.data.map((category, key) => {
       var index = key + 1;
@@ -69,8 +69,12 @@ export default function Category() {
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
-          <Button fullWidth color="primary" onClick={() => handleClick()}>
-            Add News
+          <Button
+            fullWidth
+            color="primary"
+            onClick={() => handleClick("/admin/add-category")}
+          >
+            Add Category
           </Button>
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>

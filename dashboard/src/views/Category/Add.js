@@ -12,7 +12,7 @@ import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-
+import Alert from "@material-ui/lab/Alert";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 const useStyles = makeStyles(styles);
@@ -20,9 +20,20 @@ const useStyles = makeStyles(styles);
 export default function AddCategories() {
   const classes = useStyles();
   const [title, setTitle] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setMessage] = useState(null);
+  const [btnLoading, setBtnLoading] = useState(0);
   const token = localStorage.getItem("token");
   const handleCreate = async (event) => {
     console.log(event);
+    setError(null);
+    setMessage(null);
+    setBtnLoading(1);
+    if (title === "") {
+      setBtnLoading(0);
+      setError("Title required");
+      return;
+    }
     const data = `title=${title}`;
     const config = {
       method: "post",
@@ -35,10 +46,12 @@ export default function AddCategories() {
     };
     try {
       const { data } = await axios(config);
-      console.log(data);
+      setMessage(data.msg);
+      setBtnLoading(0);
     } catch (error) {
+      setError("Unable to Create Category");
+      setBtnLoading(0);
       console.log(error);
-      //const { data } = error.response;
     }
   };
   return (
@@ -49,6 +62,12 @@ export default function AddCategories() {
       <CardBody>
         <Grid container justify="center">
           <GridItem xs={12} sm={12} md={8}>
+            {error !== null ? <Alert severity="error">{error}</Alert> : ""}
+            {success !== null ? (
+              <Alert severity="success">{success}</Alert>
+            ) : (
+              ""
+            )}
             <CustomInput
               labelText="Title"
               id="float"
@@ -64,12 +83,13 @@ export default function AddCategories() {
               fullWidth
               variant="contained"
               color="primary"
+              disabled={btnLoading}
               onClick={(event) => {
                 handleCreate(event);
               }}
               className={classes.submit}
             >
-              Add Category
+              {btnLoading ? "Loading..." : "Add"}
             </Button>
           </GridItem>
         </Grid>
