@@ -50,8 +50,26 @@ exports.getAllNews = async (req,res) => {
 }
 
 exports.getAll = async (req,res) => {
+	if(req.params.type!='all')
+		return getByType(req,res);
+	const category = await Category.findAll({
+		include:[
+	  	{
+	  	 model: Media,
+	  	 attributes: ['id','path'],
+	  	},
+	  ],
+	});
+	res.status(200).json(category);
+
+}
+
+const getByType = async (req,res) => {
 
 	const category = await Category.findAll({
+		where: {
+			type: req.params.type,
+		  },
 		include:[
 	  	{
 	  	 model: Media,

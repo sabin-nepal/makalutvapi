@@ -12,7 +12,7 @@ const{
 }	= require('../controllers/category.js');
 
 router.route('/create').post(protect,create);
-router.route('/').get(getAll);
+router.route('/:type').get(getAll);
 router.route('/news').get(getAllNews);
 
 
