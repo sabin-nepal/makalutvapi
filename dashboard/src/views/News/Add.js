@@ -1,75 +1,52 @@
-import React, { useEffect } from "react";
-//import axios from "axios";
-// react plugin for creating charts
-// import ChartistGraph from "react-chartist";
-// @material-ui/core
-//import { makeStyles } from "@material-ui/core/styles";
-//import Icon from "@material-ui/core/Icon";
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+//import InputAdornment from "@material-ui/core/InputAdornment";
+import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
-//import Store from "@material-ui/icons/Store";
-// import Warning from "@material-ui/icons/Warning";
-// import DateRange from "@material-ui/icons/DateRange";
-// import LocalOffer from "@material-ui/icons/LocalOffer";
-// import Update from "@material-ui/icons/Update";
-// import ArrowUpward from "@material-ui/icons/ArrowUpward";
-// import AccessTime from "@material-ui/icons/AccessTime";
-//import Accessibility from "@material-ui/icons/Accessibility";
-// import BugReport from "@material-ui/icons/BugReport";
-// import Code from "@material-ui/icons/Code";
-// import Cloud from "@material-ui/icons/Cloud";
-// core components
+//import People from "@material-ui/icons/People";
+//core components
+import CustomInput from "components/CustomInput/CustomInput.js";
+import Button from "@material-ui/core/Button";
 import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-// import Table from "components/Table/Table.js";
-// //import Button from "components/CustomButtons/Button.js";
-// // import Tasks from "components/Tasks/Tasks.js";
-// // import CustomTabs from "components/CustomTabs/CustomTabs.js";
-// // import Danger from "components/Typography/Danger.js";
-// import Card from "components/Card/Card.js";
-// import CardHeader from "components/Card/CardHeader.js";
-// import CardBody from "components/Card/CardBody.js";
-// import CardFooter from "components/Card/CardFooter.js";
+import Card from "components/Card/Card.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CardBody from "components/Card/CardBody.js";
 
-// import { bugs, website, server } from "variables/general.js";
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-// import {
-//   dailySalesChart,
-//   emailsSubscriptionChart,
-//   completedTasksChart,
-// } from "variables/charts.js";
-
-//import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-//import { useHistory } from "react-router-dom";
-
-//const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles);
 
 export default function AddNews() {
-  //const classes = useStyles();
-  //const history = useHistory();
-  //   let _tableData = [];
-  //   const [news, setNews] = useState([]);
-  useEffect(() => {}, []);
+  const classes = useStyles();
   return (
-    <div>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={4}></GridItem>
-      </GridContainer>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          {/* <Card>
-            <CardHeader color="success">
-              <h4 className={classes.cardTitleWhite}>Recent Posts</h4>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Category", "Edit", "Delete"]}
-                tableData={news}
-              />
-            </CardBody>
-          </Card> */}
-        </GridItem>
-      </GridContainer>
-    </div>
+    <Card>
+      <CardHeader color="info">
+        <h4 className={classes.cardTitleWhite}>Add News</h4>
+      </CardHeader>
+      <CardBody>
+        <Grid container justify="center">
+          <GridItem xs={12} sm={12} md={8}>
+            <CustomInput
+              labelText="News Title"
+              id="float"
+              formControlProps={{
+                fullWidth: true,
+              }}
+            />
+          </GridItem>
+          <GridItem xs={12} sm={12} md={8}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Add News
+            </Button>
+          </GridItem>
+        </Grid>
+      </CardBody>
+    </Card>
   );
 }
