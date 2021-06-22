@@ -57,13 +57,12 @@ export default function News() {
   const getAllNews = async () => {
     const response = await axios.get("/news");
     let data;
-    var i = 1;
-    response.data.map((getNews) => {
+    response.data.map((getNews, key) => {
+      var index = key + 1;
       var category =
         getNews.categories[0] !== undefined ? getNews.categories[0].title : "";
-      data = ["" + i, getNews.title, category, "Edit", "delete"];
+      data = ["" + index, getNews.title, category, "Edit", "delete"];
       _tableData.push(data);
-      i++;
     });
     setNews(_tableData);
   };

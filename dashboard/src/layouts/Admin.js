@@ -37,8 +37,8 @@ const switchRoutes = (
       return null;
     })}
     <Route exact path="/admin/login" component={Login} />
-    <Redirect from="/admin" to="/admin/login" />
     <PrivateRoute exact path="/admin/add-news" component={AddNews} />
+    <Redirect from="/admin" to="/admin/login" />
   </Switch>
 );
 
