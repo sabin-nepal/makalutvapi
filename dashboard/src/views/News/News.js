@@ -61,7 +61,17 @@ export default function News() {
       var index = key + 1;
       var category =
         getNews.categories[0] !== undefined ? getNews.categories[0].title : "";
-      data = ["" + index, getNews.title, category, "Edit", "delete"];
+      data = [
+        "" + index,
+        getNews.title,
+        category,
+        <a href="#" key={key}>
+          Edit
+        </a>,
+        <a href="#" key={key}>
+          Delete
+        </a>,
+      ];
       _tableData.push(data);
     });
     setNews(_tableData);
