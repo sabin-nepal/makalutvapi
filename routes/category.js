@@ -13,7 +13,7 @@ const{
 
 router.route('/create').post(protect,create);
 router.route('/:type/:limit').get(getAll);
-router.route('/news').get(getNews);
+router.route('/news/limit/:limit').get(getNews);
 router.route('/edit/:id').get(edit);
 router.route('/delete/:id').get(deletes);
 

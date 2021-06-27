@@ -25,7 +25,7 @@ exports.create = async (req,res) => {
 }
 
 exports.getNews = async (req,res) => {
-    const {limit} = req.body;
+    const {limit} = req.params;
 	var news;
 	let categoriesNews = [];
 	const categories = await Category.findAll({
