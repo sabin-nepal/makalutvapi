@@ -24,28 +24,46 @@ exports.create = async (req,res) => {
 	
 }
 
-exports.getAllNews = async (req,res) => {
-	const category = await Category.findAll({
+exports.getNews = async (req,res) => {
+    const {limit} = req.body;
+	var news;
+	let categoriesNews = [];
+	const categories = await Category.findAll({
 		include:[
 	  	{
 	  	 model: Media,
 	  	 attributes: ['id','path'],
 	  	},
-	  	{
-	  		model: News,
-	  		include:[{
-	  			model: Media,
-	  			attributes: ['id','path'],
-	  		},{
-	    	 model: PollResult,
-	    	} ],
-			where: {
-	    	   status: 'active'
-	    	 },
-		}
 	  ],
-	});
-	res.status(200).json(category);
+	});			
+	categories.map(async(category)=>{
+		news = await category.getNews({
+			where: {
+				status: 'active'
+			  },
+			limit:Number(limit),
+			include:[{
+				model: Media,
+				attributes: ['id','path'],
+			},{
+		   model: PollResult,
+		  } ],		  
+		});
+		var medium = category.medium !=null ?
+		{
+			'id' :  category.medium['id'],
+			'path' : category.medium['path'],
+		}:null;
+        categoriesNews.push({
+			'id': category.id,
+			'title': category.title,
+			medium,
+			news,
+		})
+	})
+    setTimeout(() => 
+    res.status(200).json(categoriesNews),
+     2000);
 
 }
 

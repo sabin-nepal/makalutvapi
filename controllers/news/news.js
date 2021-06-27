@@ -202,11 +202,19 @@ exports.deletes = async (req,res) => {
 
 exports.getCategoryNews = async (req,res) => {
 
+	const {id,limit} = req.params;
+	var setLimit; 
+	if(Number(limit)===-1){
+		setLimit = null;
+	}
+	else{
+		setLimit = limit; 
+	}
 	const news = await News.findAll({
 		where: {
     	   status: 'active'
     	 },
-    	 limit: Number(req.params.limit),
+    	 limit: setLimit,
     	 order: [
     	     ['createdAt', 'DESC'],
     	    ],
@@ -214,7 +222,7 @@ exports.getCategoryNews = async (req,res) => {
 	    	{
 	    	 model: Category,
 	    	 where: {
-	    	   id: req.params.id
+	    	   id: id
 	    	 },
 	    	 through: {attributes: []}
 	    	},
