@@ -3,7 +3,7 @@ const Category = require('../models/Category')
 const Media = require('../models/Media')
 exports.create = async (req,res) => {
 
-	const { title,media,startDate,endDate,status,type='banner'} = req.body
+	const { title,url,media,startDate,endDate,status,type='banner'} = req.body
 	if(!startDate || !endDate)
 		return res.status(406).json({
 		  success: false,
@@ -15,6 +15,7 @@ exports.create = async (req,res) => {
 		status:status,
 		startDate:startDate,
 		type:type,
+		url:url,
 		endDate:endDate,
 		userId:req.user.id,
 	});
@@ -27,16 +28,16 @@ exports.create = async (req,res) => {
 
 exports.checkAdv = async (req,res) => {
 
-	const advertisement = await Adv.findAll();
+	const advertisement = await Adv.findAll({
+		where: {
+		  status: 'active',
+		}});
 	var datetime = Math.floor(new Date().getTime() /1000);
 	advertisement.forEach(async (adv) => {
 		var startTime = toTimestamp(adv.startDate);
 		var endTime = toTimestamp(adv.endDate);
 		if(startTime > datetime || endTime <= datetime){
-			adv.status = 'draft';
-		}
-		if(startTime <= datetime && endTime > datetime){
-			adv.status = 'active';
+			adv.status = 'inactive';
 		}
 		await adv.save();
 	})
@@ -90,7 +91,7 @@ exports.getByType = async(req,res) => {
 // }
 
 exports.edit = async (req,res) => {
-	const { title,media,startDate,endDate,status,type} = req.body
+	const { title,url,media,startDate,endDate,status,type} = req.body
 	const adv = await Adv.findByPk(req.params.id);
 	if(!adv)
 		return res.status(401).json({
@@ -103,6 +104,7 @@ exports.edit = async (req,res) => {
 	adv.startDate = startDate
 	adv.endDate = endDate
 	adv.status = status
+	adv.url = url
 	adv.type = type
 	await adv.save();
 	//await adv.addMedia(media);
