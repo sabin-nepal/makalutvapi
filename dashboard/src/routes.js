@@ -26,6 +26,7 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import NewsPage from "views/News/News.js";
 import InsightPage from "views/Insights/Insight.js";
 import CategoryPage from "views/Category/Category.js";
+import AdvPage from "views/Advertisements/Adv.js";
 // import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
 // import Maps from "views/Maps/Maps.js";
@@ -60,6 +61,13 @@ const dashboardRoutes = [
     name: "Insights",
     icon: Dashboard,
     component: InsightPage,
+    layout: "/admin",
+  },
+  {
+    path: "/advertsiement",
+    name: "Advertisements",
+    icon: Dashboard,
+    component: AdvPage,
     layout: "/admin",
   },
   // {

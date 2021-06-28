@@ -16,6 +16,7 @@ import Login from "../views/Login/Login.js";
 import AddNews from "../views/News/Add.js";
 import AddCategories from "../views/Category/Add.js";
 import EditCategories from "../views/Category/Edit.js";
+import FormAdv from "../views/Advertisements/Form.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -42,6 +43,7 @@ const switchRoutes = (
     <PrivateRoute exact path="/admin/add-news" component={AddNews} />
     <PrivateRoute path="/admin/add-category" component={AddCategories} />
     <PrivateRoute path="/admin/edit/category" component={EditCategories} />
+    <PrivateRoute path="/admin/form/adv" component={FormAdv} />
     <Redirect from="/admin" to="/admin/login" />
   </Switch>
 );
