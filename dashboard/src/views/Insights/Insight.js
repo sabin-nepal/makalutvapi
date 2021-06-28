@@ -46,7 +46,7 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
 
-export default function Category() {
+export default function Insight() {
   const classes = useStyles();
   const history = useHistory();
   let _tableData = [];
@@ -56,7 +56,7 @@ export default function Category() {
   const deleteData = async (value) => {
     const config = {
       method: "post",
-      url: "/category/delete/" + value,
+      url: "/insight/delete/" + value,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,
@@ -74,7 +74,8 @@ export default function Category() {
   };
   const editData = async (value) => {
     history.push({
-      pathname: "/admin/edit/category",
+      pathname: "/admin/form/insight",
+      query: "query=edit",
       state: value,
     });
   };
@@ -82,20 +83,25 @@ export default function Category() {
     history.push(value);
   }
   useEffect(() => {
-    getAllCategory();
+    getAllInsights();
   }, []);
-  const getAllCategory = async () => {
-    const response = await axios.get("/category/all/-1");
+  const getAllInsights = async () => {
+    const response = await axios.get("/insight");
     let data;
-    response.data.map((category, key) => {
+    response.data.map((insight, key) => {
       var index = key + 1;
       data = [
         "" + index,
-        category.title,
-        <Button onClick={() => editData(category)} key={key}>
+        <img
+          src={insight.media[0]["path"]}
+          height="80"
+          width="100"
+          key={key}
+        />,
+        <Button onClick={() => editData(insight)} key={key}>
           <EditIcon></EditIcon>
         </Button>,
-        <Button onClick={() => deleteData(category.id)} key={key}>
+        <Button onClick={() => deleteData(insight.id)} key={key}>
           <DeleteIcon></DeleteIcon>
         </Button>,
       ];
@@ -112,20 +118,20 @@ export default function Category() {
           <Button
             fullWidth
             color="primary"
-            onClick={() => handleClick("/admin/add-category")}
+            onClick={() => handleClick("/admin/add-insight")}
           >
-            Add Category
+            Add Insight
           </Button>
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="success">
-              <h4 className={classes.cardTitleWhite}>Category</h4>
+              <h4 className={classes.cardTitleWhite}>Insight</h4>
             </CardHeader>
             <CardBody>
               <Table
                 tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Edit", "Delete"]}
+                tableHead={["ID", "Image", "Edit", "Delete"]}
                 tableData={categories}
               />
             </CardBody>

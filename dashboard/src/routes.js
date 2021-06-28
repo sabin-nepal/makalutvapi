@@ -24,6 +24,7 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 
 import NewsPage from "views/News/News.js";
+import InsightPage from "views/Insights/Insight.js";
 import CategoryPage from "views/Category/Category.js";
 // import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
@@ -52,6 +53,13 @@ const dashboardRoutes = [
     name: "News",
     icon: Dashboard,
     component: NewsPage,
+    layout: "/admin",
+  },
+  {
+    path: "/insight",
+    name: "Insights",
+    icon: Dashboard,
+    component: InsightPage,
     layout: "/admin",
   },
   // {
