@@ -208,7 +208,7 @@ exports.getCategoryNews = async (req,res) => {
 		setLimit = null;
 	}
 	else{
-		setLimit = limit; 
+		setLimit = Number(limit); 
 	}
 	const news = await News.findAll({
 		where: {
@@ -226,6 +226,9 @@ exports.getCategoryNews = async (req,res) => {
 	    	 },
 	    	 through: {attributes: []}
 	    	},
+	    	{
+	    	 model: PollResult,
+	    	}, 
 	    	{
 	    	 model: Media,
 	    	 attributes: ['id','path','type'],

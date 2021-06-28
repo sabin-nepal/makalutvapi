@@ -28,6 +28,9 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import DeleteIcon from "@material-ui/icons/DeleteOutlined";
+import EditIcon from "@material-ui/icons/EditOutlined";
+import Alert from "@material-ui/lab/Alert";
 // import CardFooter from "components/Card/CardFooter.js";
 
 // import { bugs, website, server } from "variables/general.js";
@@ -48,6 +51,35 @@ export default function Category() {
   const history = useHistory();
   let _tableData = [];
   const [categories, setCategories] = useState([]);
+  const [message, setMessage] = useState(null);
+  const token = localStorage.getItem("token");
+  const deleteData = async (value) => {
+    console.log(value);
+    const config = {
+      method: "post",
+      url: "/category/delete/" + value,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const data = await axios(config);
+      setMessage(data.data.msg);
+    } catch (error) {
+      console.log(error);
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+  const editData = async (value) => {
+    console.log(value);
+    history.push({
+      pathname: "/admin/edit/category",
+      state: value,
+    });
+  };
   function handleClick(value) {
     history.push(value);
   }
@@ -59,7 +91,16 @@ export default function Category() {
     let data;
     response.data.map((category, key) => {
       var index = key + 1;
-      data = ["" + index, category.title, "edit", "delete"];
+      data = [
+        "" + index,
+        category.title,
+        <Button onClick={() => editData(category)} key={key}>
+          <EditIcon></EditIcon>
+        </Button>,
+        <Button onClick={() => deleteData(category.id)} key={key}>
+          <DeleteIcon></DeleteIcon>
+        </Button>,
+      ];
       _tableData.push(data);
     });
     setCategories(_tableData);
@@ -69,6 +110,7 @@ export default function Category() {
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
+          {message !== null ? <Alert severity="success">{message}</Alert> : ""}
           <Button
             fullWidth
             color="primary"
