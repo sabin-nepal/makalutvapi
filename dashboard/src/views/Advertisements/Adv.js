@@ -119,7 +119,7 @@ export default function Adv() {
         <GridItem xs={12} sm={12} md={4}>
           {message !== null ? <Alert severity="success">{message}</Alert> : ""}
           <Button fullWidth color="primary" onClick={() => handleClick()}>
-            Add Category
+            Add Advertisment
           </Button>
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>

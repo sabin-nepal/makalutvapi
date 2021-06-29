@@ -105,7 +105,7 @@ export default function FormAdv(props) {
     <Card>
       <CardHeader color="info">
         <h4 className={classes.cardTitleWhite}>
-          {data.location.state !== undefined ? "Update" : "Add"} Category
+          {data.location.state !== undefined ? "Update" : "Add"} Advertisement
         </h4>
       </CardHeader>
       <CardBody>
