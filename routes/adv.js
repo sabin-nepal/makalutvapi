@@ -10,10 +10,12 @@ const{
 	edit,
 	deletes,
 	checkAdv,
+	getAdvs,
 }	= require('../controllers/adv.js');
 
 
 router.route('/').get(getAll);
+router.route('/all').get(protect,getAdvs);
 router.route('/type/:type').get(getByType);
 router.route('/check/status').get(checkAdv);
 router.route('/create').post(protect,create);

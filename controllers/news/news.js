@@ -76,6 +76,29 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(news);
 }
 
+exports.getNews = async(req,res) => {
+	const news = await News.findAll({
+	  include: [
+	    	{
+	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
+	    ], 
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(news);
+}
+
 const getAllNewsByType = exports.getType = async(req,res) => {
 	const {type} = req.params;
 	const news = await News.findAll({

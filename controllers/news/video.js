@@ -3,7 +3,7 @@ const Media = require('../../models/Media')
 
 exports.create = async (req,res) => {
 
-	const { title,media,category,thumbnail } = req.body
+	const { title,media,status,category,thumbnail } = req.body
 
 	if(!title || !media)
 		return res.status(406).json({
@@ -13,6 +13,7 @@ exports.create = async (req,res) => {
 	const video =  await Video.create({
 		title:title,
 		videoId: media,
+		status: status,
 		thumbnailId: thumbnail,
 		userId:req.user.id,
 
@@ -30,6 +31,33 @@ exports.getAll = async(req,res)=>{
 	  where: {
 	    status: 'active',
 	  },
+	  include:[
+	  		{
+	  		 model: Media,
+	  		 as: 'thumbnail',
+	  		 attributes: ['path'],
+	  		},
+	  		{
+	  		 model: Media,
+	  		 as: 'media',
+	  		 attributes: ['path'],
+	  		},	
+	  		{
+	  		 model: Category,
+	  		 attributes: ['id','title'],
+	  		},	
+	  ],	    	
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(video);
+
+}
+
+exports.getVideos = async(req,res)=>{
+
+	const video = await Video.findAll({
 	  include:[
 	  		{
 	  		 model: Media,

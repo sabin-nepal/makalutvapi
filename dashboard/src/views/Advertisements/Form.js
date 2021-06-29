@@ -3,6 +3,7 @@ import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 //import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 // @material-ui/icons
 //import People from "@material-ui/icons/People";
 //core components
@@ -28,6 +29,8 @@ export default function FormAdv(props) {
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("active");
   const [image, setImage] = useState("");
+  const [startDate, setStart] = useState("");
+  const [endDate, setEnd] = useState("");
   const [url, setUrl] = useState("");
   const [error, setError] = useState(null);
   const [success, setMessage] = useState(null);
@@ -40,6 +43,8 @@ export default function FormAdv(props) {
       setImage(adv.medium["path"]);
       setUrl(adv.url);
       setStatus(adv.status);
+      setStart(adv.startDate);
+      setEnd(adv.endDate);
     }
   }, []);
   console.log(url);
@@ -56,22 +61,36 @@ export default function FormAdv(props) {
       setError("Title required");
       return;
     }
-    const data = `title=${title}`;
+    if (startDate === "") {
+      setBtnLoading(0);
+      setError("start date required");
+      return;
+    }
+    if (endDate === "") {
+      setBtnLoading(0);
+      setError("End date required");
+      return;
+    }
+    const advData = `title=${title}&status=${status}&startDate=${startDate}&endDate=${endDate}`;
+    const apiUrl =
+      data.location.state !== undefined
+        ? "edit/" + data.location.state.id
+        : "/create";
     const config = {
       method: "post",
-      url: "/category/create",
+      url: "/adv/" + apiUrl,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,
       },
-      data: data,
+      data: advData,
     };
     try {
       const { data } = await axios(config);
       setMessage(data.msg);
       setBtnLoading(0);
     } catch (error) {
-      setError("Unable to Create Category");
+      setError("Unable to Handle request");
       setBtnLoading(0);
       console.log(error);
     }
@@ -101,6 +120,28 @@ export default function FormAdv(props) {
               formControlProps={{
                 fullWidth: true,
                 onChange: (event) => setTitle(event.target.value),
+              }}
+            />
+            <TextField
+              id="start-date"
+              label="StartDate"
+              type="datetime-local"
+              value={startDate}
+              onChange={(event) => setStart(event.currentTarget.value)}
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              id="end-date"
+              label="StartDate"
+              type="datetime-local"
+              value={endDate}
+              onChange={(event) => setEnd(event.currentTarget.value)}
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
               }}
             />
             <Button
