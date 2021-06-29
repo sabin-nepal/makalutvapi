@@ -19,13 +19,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import moment from "moment";
 
 const useStyles = makeStyles(styles);
 
 export default function FormAdv(props) {
   const classes = useStyles();
   const data = props;
-  console.log(data);
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("active");
   const [image, setImage] = useState("");
@@ -39,12 +39,18 @@ export default function FormAdv(props) {
   useEffect(() => {
     if (data.location.state !== undefined) {
       var adv = data.location.state;
+      const sDate = moment(new Date(adv.startDate)).format(
+        "yyyy-MM-DDThh:mm:ss.SSS"
+      );
+      const eDate = moment(new Date(adv.endDate)).format(
+        "yyyy-MM-DDThh:mm:ss.SSS"
+      );
       setTitle(adv.title);
       setImage(adv.medium["path"]);
       setUrl(adv.url);
       setStatus(adv.status);
-      setStart(adv.startDate);
-      setEnd(adv.endDate);
+      setStart(sDate);
+      setEnd(eDate);
     }
   }, []);
   console.log(url);

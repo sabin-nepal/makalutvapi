@@ -85,7 +85,15 @@ export default function Adv() {
     getAllAdv();
   }, []);
   const getAllAdv = async () => {
-    const response = await axios.get("/adv");
+    const config = {
+      method: "get",
+      url: "/adv/all",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + token,
+      },
+    };
+    const response = await axios(config);
     let data;
     response.data.map((adv, key) => {
       var index = key + 1;
