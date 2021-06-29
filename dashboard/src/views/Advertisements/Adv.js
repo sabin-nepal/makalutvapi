@@ -66,6 +66,7 @@ export default function Adv() {
       const data = await axios(config);
       setMessage(data.data.msg);
     } catch (error) {
+      setMessage("Cannot delete advertsiement");
       console.log(error);
     }
     setTimeout(() => {

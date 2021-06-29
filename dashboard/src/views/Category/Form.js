@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 //import InputAdornment from "@material-ui/core/InputAdornment";
@@ -17,14 +17,23 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 
 const useStyles = makeStyles(styles);
 
-export default function AddCategories() {
+export default function FormCategories(props) {
   const classes = useStyles();
+  const data = props;
+  const category = data.location.state;
   const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
   const [error, setError] = useState(null);
   const [success, setMessage] = useState(null);
   const [btnLoading, setBtnLoading] = useState(0);
   const token = localStorage.getItem("token");
-  const handleCreate = async (event) => {
+  useEffect(() => {
+    if (category !== undefined) {
+      setTitle(category.title);
+      setImage(category.medium["path"]);
+    }
+  }, []);
+  const handleUpdate = async (event) => {
     console.log(event);
     setError(null);
     setMessage(null);
@@ -34,10 +43,11 @@ export default function AddCategories() {
       setError("Title required");
       return;
     }
+    const apiUrl = category === undefined ? "create" : "edit/" + category.id;
     const data = `title=${title}`;
     const config = {
       method: "post",
-      url: "/category/create",
+      url: "/category/" + apiUrl,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,
@@ -49,15 +59,18 @@ export default function AddCategories() {
       setMessage(data.msg);
       setBtnLoading(0);
     } catch (error) {
-      setError("Unable to Create Category");
+      setError("Unable to Update Category");
       setBtnLoading(0);
       console.log(error);
     }
   };
+
   return (
     <Card>
       <CardHeader color="info">
-        <h4 className={classes.cardTitleWhite}>Add Category</h4>
+        <h4 className={classes.cardTitleWhite}>
+          {category === undefined ? "Add" : "Update"}Category
+        </h4>
       </CardHeader>
       <CardBody>
         <Grid container justify="center">
@@ -71,13 +84,14 @@ export default function AddCategories() {
             <CustomInput
               labelText="Title"
               id="float"
+              inputProps={{
+                value: title,
+              }}
               formControlProps={{
                 fullWidth: true,
                 onChange: (event) => setTitle(event.target.value),
               }}
             />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={8}>
             <Button
               type="submit"
               fullWidth
@@ -85,12 +99,24 @@ export default function AddCategories() {
               color="primary"
               disabled={btnLoading}
               onClick={(event) => {
-                handleCreate(event);
+                handleUpdate(event);
               }}
               className={classes.submit}
             >
-              {btnLoading ? "Loading..." : "Add"}
+              {btnLoading
+                ? "Loading..."
+                : category === undefined
+                ? "Add"
+                : "Update"}
             </Button>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={4}>
+            <h5>Choose Image</h5>
+            {image !== "" ? (
+              <img src={image} alt={title} height="150" width="150" />
+            ) : (
+              ""
+            )}
           </GridItem>
         </Grid>
       </CardBody>
