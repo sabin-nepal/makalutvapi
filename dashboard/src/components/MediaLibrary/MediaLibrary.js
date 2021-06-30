@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function MediaLibrary() {
+export default function MediaLibrary(props) {
   const [mediaList, setMediaList] = useState([]);
   const [mediaSelected, setMediaSelected] = useState("2px solid red");
   const mediaStyles = {
@@ -10,6 +10,7 @@ export default function MediaLibrary() {
     padding: "15px",
     overflow: "hidden",
     boxSizing: "border-box",
+    display: "block",
   };
   const imgStyles = {
     maxWidth: "100%",
@@ -17,13 +18,16 @@ export default function MediaLibrary() {
     height: "100%",
     objectFit: "cover",
     border: mediaSelected,
+    pointerEvents: "none",
   };
   const handleClick = (event) => {
     //event.stopPropagation();
     event.preventDefault();
     //event.nativeEvent.stopImmediatePropagation();
     setMediaSelected("2px solid green");
-    console.log(event.target.mediaid);
+    console.log(event.target.dataset.id);
+    // eslint-disable-next-line react/prop-types
+    props.sendDataToParent(event.target.dataset.id, event.target.href);
     //sendDataToParent(event.target.mediaId);
   };
 
@@ -44,7 +48,7 @@ export default function MediaLibrary() {
           className="mediaItem"
           key={key}
           style={mediaStyles}
-          mediaId={media.id}
+          data-id={media.id}
           onClick={handleClick}
         >
           {media.type === "thumbnail" ? (
