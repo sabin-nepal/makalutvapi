@@ -14,8 +14,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
 import Login from "../views/Login/Login.js";
 import AddNews from "../views/News/Add.js";
-import AddCategories from "../views/Category/Add.js";
-import EditCategories from "../views/Category/Edit.js";
+import FormCategories from "../views/Category/Form.js";
 import FormAdv from "../views/Advertisements/Form.js";
 import MakaluMediaWrapperr from "../views/Media/MediaLibrary.js";
 
@@ -42,8 +41,7 @@ const switchRoutes = (
     })}
     <Route exact path="/admin/login" component={Login} />
     <PrivateRoute exact path="/admin/add-news" component={AddNews} />
-    <PrivateRoute path="/admin/add-category" component={AddCategories} />
-    <PrivateRoute path="/admin/edit/category" component={EditCategories} />
+    <PrivateRoute path="/admin/form/category" component={FormCategories} />
     <PrivateRoute path="/admin/form/adv" component={FormAdv} />
     <PrivateRoute path="/admin/media" component={MakaluMediaWrapperr} />
     <Redirect from="/admin" to="/admin/login" />
