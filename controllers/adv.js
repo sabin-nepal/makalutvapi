@@ -62,6 +62,21 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(adv);
 }
 
+exports.getAdvs = async(req,res) => {
+	const adv = await Adv.findAll({
+	  include: [
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	},
+	    ], 
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(adv);
+}
+
 exports.getByType = async(req,res) => {
 	const adv = await Adv.findAll({
 	  where: {

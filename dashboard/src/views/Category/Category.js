@@ -74,7 +74,7 @@ export default function Category() {
   };
   const editData = async (value) => {
     history.push({
-      pathname: "/admin/edit/category",
+      pathname: "/admin/form/category",
       state: value,
     });
   };
@@ -112,7 +112,7 @@ export default function Category() {
           <Button
             fullWidth
             color="primary"
-            onClick={() => handleClick("/admin/add-category")}
+            onClick={() => handleClick("/admin/form/category")}
           >
             Add Category
           </Button>

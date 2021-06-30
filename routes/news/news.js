@@ -15,10 +15,12 @@ const{
 	vote,
 	getVoteResult,
 	getSearchResult,
+	getNews,
 }	= require('../../controllers/news/news.js');
 
 
 router.route('/').get(getAll);
+router.route('/').get(protect,getNews);
 router.route('/type/:type').get(getType);
 router.route('/type/:type/:limit').get(getTypeLimit);
 router.route('/:id').get(getSingle);

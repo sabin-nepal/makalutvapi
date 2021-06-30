@@ -66,6 +66,7 @@ export default function Adv() {
       const data = await axios(config);
       setMessage(data.data.msg);
     } catch (error) {
+      setMessage("Cannot delete advertsiement");
       console.log(error);
     }
     setTimeout(() => {
@@ -85,7 +86,15 @@ export default function Adv() {
     getAllAdv();
   }, []);
   const getAllAdv = async () => {
-    const response = await axios.get("/adv");
+    const config = {
+      method: "get",
+      url: "/adv/all",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + token,
+      },
+    };
+    const response = await axios(config);
     let data;
     response.data.map((adv, key) => {
       var index = key + 1;
@@ -111,7 +120,7 @@ export default function Adv() {
         <GridItem xs={12} sm={12} md={4}>
           {message !== null ? <Alert severity="success">{message}</Alert> : ""}
           <Button fullWidth color="primary" onClick={() => handleClick()}>
-            Add Category
+            Add Advertisment
           </Button>
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>
