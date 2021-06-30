@@ -136,7 +136,6 @@ export default function FormCategories(props) {
             </Button>
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
-            <h5>Choose Image</h5>
             <Button
               type="submit"
               fullWidth

@@ -135,7 +135,7 @@ exports.edit = async (req,res) => {
 		  msg: "Title cannot be empty.",
 		});
 	category.title = title;
-	category.media = media;
+	category.mediumId = media;
 
 	await category.save();
 	
