@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 //import People from "@material-ui/icons/People";
 //core components
 import CustomInput from "components/CustomInput/CustomInput.js";
+import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
+import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
@@ -25,6 +27,8 @@ export default function FormCategories(props) {
   const [image, setImage] = useState("");
   const [error, setError] = useState(null);
   const [success, setMessage] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [imageId, setImageId] = useState("");
   const [btnLoading, setBtnLoading] = useState(0);
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -44,7 +48,7 @@ export default function FormCategories(props) {
       return;
     }
     const apiUrl = category === undefined ? "create" : "edit/" + category.id;
-    const data = `title=${title}`;
+    const data = `title=${title}&media=${imageId}`;
     const config = {
       method: "post",
       url: "/category/" + apiUrl,
@@ -63,6 +67,27 @@ export default function FormCategories(props) {
       setBtnLoading(0);
       console.log(error);
     }
+  };
+  const sendDataToParent = (id, img) => {
+    if (!checkURL(img)) {
+      setError("Only Support jpg/png format");
+    } else {
+      setImageId(id);
+      setImage(img);
+      setError(null);
+    }
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const checkURL = (url) => {
+    return url.match(/\.(jpeg|jpg|png)$/) != null;
   };
 
   return (
@@ -112,6 +137,29 @@ export default function FormCategories(props) {
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
             <h5>Choose Image</h5>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={handleOpen}
+            >
+              {image === "" ? "Add" : "Edit"} Image
+            </Button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+            >
+              <div className={classes.paper}>
+                <MediaLibrary
+                  sendDataToParent={sendDataToParent}
+                  imageUrl={image}
+                />
+              </div>
+            </Modal>
             {image !== "" ? (
               <img src={image} alt={title} height="150" width="150" />
             ) : (

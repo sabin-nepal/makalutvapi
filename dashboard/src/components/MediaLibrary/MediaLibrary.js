@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function MediaLibrary(props) {
+  const propsData = props;
   const [mediaList, setMediaList] = useState([]);
-  const [mediaSelected, setMediaSelected] = useState("2px solid red");
   const mediaStyles = {
     width: "20%",
     height: "200px",
@@ -17,14 +17,21 @@ export default function MediaLibrary(props) {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    border: mediaSelected,
+    border: "2px solid red",
+    pointerEvents: "none",
+  };
+  const selectedStyles = {
+    maxWidth: "100%",
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    border: "2px solid green",
     pointerEvents: "none",
   };
   const handleClick = (event) => {
     //event.stopPropagation();
     event.preventDefault();
     //event.nativeEvent.stopImmediatePropagation();
-    setMediaSelected("2px solid green");
     console.log(event.target.dataset.id);
     // eslint-disable-next-line react/prop-types
     props.sendDataToParent(event.target.dataset.id, event.target.href);
@@ -37,7 +44,6 @@ export default function MediaLibrary(props) {
   }, []);
   const getAllMedia = async () => {
     const response = await axios.get("/media");
-    console.log(response.data);
     setMediaList(response.data);
   };
   return (
@@ -52,9 +58,22 @@ export default function MediaLibrary(props) {
           onClick={handleClick}
         >
           {media.type === "thumbnail" ? (
-            <img src={media.path} style={imgStyles} />
+            <img
+              src={media.path}
+              style={
+                media.path === propsData["imageUrl"]
+                  ? selectedStyles
+                  : imgStyles
+              }
+            />
           ) : (
-            <video style={imgStyles}>
+            <video
+              style={
+                media.path === propsData["imageUrl"]
+                  ? selectedStyles
+                  : imgStyles
+              }
+            >
               <source src={media.path} type="video/mp4"></source>
             </video>
           )}
