@@ -30,6 +30,7 @@ export default function FormAdv(props) {
   const classes = useStyles();
   const data = props;
   const [title, setTitle] = useState("");
+  const [type, setType] = useState("banner");
   const [status, setStatus] = useState("active");
   const [image, setImage] = useState("");
   const [startDate, setStart] = useState("");
@@ -56,11 +57,15 @@ export default function FormAdv(props) {
       setStatus(adv.status);
       setStart(sDate);
       setEnd(eDate);
+      setType(adv.type);
     }
   }, []);
   console.log(url);
   const handleChangeStatus = (event) => {
     setStatus(event.target.value);
+  };
+  const handleChangeType = (event) => {
+    setType(event.target.value);
   };
   const handleUpdate = async (event) => {
     console.log(event);
@@ -82,7 +87,8 @@ export default function FormAdv(props) {
       setError("End date required");
       return;
     }
-    const advData = `title=${title}&status=${status}&startDate=${startDate}&endDate=${endDate}&media=${imageId}`;
+    const advData = `title=${title}&status=${status}&startDate=${startDate}
+    &endDate=${endDate}&media=${imageId}&type=${type}`;
     const apiUrl =
       data.location.state !== undefined
         ? "edit/" + data.location.state.id
@@ -109,7 +115,7 @@ export default function FormAdv(props) {
 
   const sendDataToParent = (id, img) => {
     if (!checkURL(img)) {
-      setError("Only Support jpg/png format");
+      setError("Only Support image");
     } else {
       setImageId(id);
       setImage(img);
@@ -209,6 +215,18 @@ export default function FormAdv(props) {
               >
                 <MenuItem value="active">Active</MenuItem>
                 <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={type}
+                onChange={handleChangeType}
+              >
+                <MenuItem value="banner">Banner</MenuItem>
+                <MenuItem value="full">Full</MenuItem>
               </Select>
             </FormControl>
             <Button
