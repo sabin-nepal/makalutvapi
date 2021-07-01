@@ -28,6 +28,9 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import DeleteIcon from "@material-ui/icons/DeleteOutlined";
+import EditIcon from "@material-ui/icons/EditOutlined";
+import Alert from "@material-ui/lab/Alert";
 // import CardFooter from "components/Card/CardFooter.js";
 
 // import { bugs, website, server } from "variables/general.js";
@@ -48,29 +51,62 @@ export default function News() {
   const history = useHistory();
   let _tableData = [];
   const [news, setNews] = useState([]);
+  const [message, setMessage] = useState(null);
+  const token = localStorage.getItem("token");
   function handleClick() {
     history.push("/admin/add-news");
   }
+  const editData = async (value) => {
+    history.push({
+      pathname: "/admin/form/news",
+      state: value,
+    });
+  };
+  const deleteData = async (value) => {
+    const config = {
+      method: "post",
+      url: "/news/delete/" + value,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const data = await axios(config);
+      setMessage(data.data.msg);
+    } catch (error) {
+      console.log(error);
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
   useEffect(() => {
     getAllNews();
   }, []);
   const getAllNews = async () => {
-    const response = await axios.get("/news");
+    const config = {
+      method: "get",
+      url: "/news/all",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: "Bearer " + token,
+      },
+    };
+    const response = await axios(config);
     let data;
     response.data.map((getNews, key) => {
       var index = key + 1;
-      var category =
-        getNews.categories[0] !== undefined ? getNews.categories[0].title : "";
       data = [
         "" + index,
         getNews.title,
-        category,
-        <a href="#" key={key}>
-          Edit
-        </a>,
-        <a href="#" key={key}>
-          Delete
-        </a>,
+        getNews.status,
+        <Button onClick={() => editData(getNews)} key={key}>
+          <EditIcon></EditIcon>
+        </Button>,
+        <Button onClick={() => deleteData(getNews.id)} key={key}>
+          <DeleteIcon></DeleteIcon>
+        </Button>,
       ];
       _tableData.push(data);
     });
@@ -80,6 +116,7 @@ export default function News() {
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
+          {message !== null ? <Alert severity="success">{message}</Alert> : ""}
           <Button fullWidth color="primary" onClick={() => handleClick()}>
             Add News
           </Button>
@@ -94,7 +131,7 @@ export default function News() {
             <CardBody>
               <Table
                 tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Category", "Edit", "Delete"]}
+                tableHead={["ID", "Name", "Status", "Edit", "Delete"]}
                 tableData={news}
               />
             </CardBody>
