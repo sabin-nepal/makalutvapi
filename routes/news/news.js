@@ -20,7 +20,7 @@ const{
 
 
 router.route('/').get(getAll);
-router.route('/').get(protect,getNews);
+router.route('/all').get(protect,getNews);
 router.route('/type/:type').get(getType);
 router.route('/type/:type/:limit').get(getTypeLimit);
 router.route('/:id').get(getSingle);
