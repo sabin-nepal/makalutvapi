@@ -6,10 +6,10 @@ exports.create = async (req,res) => {
 
 	const { title,media,type="news" } = req.body
 
-	if(!title)
+	if(!title || !media)
 		return res.status(406).json({
 		  success:false,
-		  msg: "Title cannot be empty.",
+		  msg: "All Field Required.",
 		});
 	await Category.create({
 	    title:title.trim(),
@@ -129,10 +129,10 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
-	if(!title)
+	if(!title || !media)
 		return res.status(406).json({
 		  success:false,
-		  msg: "Title cannot be empty.",
+		  msg: "All Field Required.",
 		});
 	category.title = title.trim();
 	category.mediumId = media;

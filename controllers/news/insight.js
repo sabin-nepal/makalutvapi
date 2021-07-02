@@ -121,6 +121,11 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
+	if(!media)
+		return res.status(406).json({
+			success: false,
+			msg: "media Cannot Be Empty",
+	});	
 	await insight.removeCategory(insight.categories)
 	await insight.removeMedia(insight.media)
 	insight.status = status

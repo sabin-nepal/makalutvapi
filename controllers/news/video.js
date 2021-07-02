@@ -90,6 +90,11 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
+	if(!title || !media)
+		return res.status(406).json({
+			success: false,
+			msg: "Title or media cannot be empty.",
+		});
 	await video.removeCategory(video.categories)
 	video.title = title.trim()
 	video.videoId = media
