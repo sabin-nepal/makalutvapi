@@ -161,12 +161,15 @@ export default function FormNews(props) {
       setError("All FIeld required");
       return;
     }
+    var apiData = new URLSearchParams();
+    categoryId.map((catt) => {
+      apiData.append("category", catt);
+    });
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
-    const apiData = `title=${title}&content=${richText}&excerpt=${excerpt}
-    &category=${[
-      "875f1e23-9869-4a8d-a997-1f87b693e3e3,7dcfd5f4-900c-4bda-a9d1-f623f43d8369",
-    ]}&status=${status}&media=${imageId}
+    apiData += `&title=${title}&content=${richText}&excerpt=${excerpt}
+    &status=${status}&media=${imageId}
     &pollTitle=${pollTitle}&type=${newsType}`;
+    console.log(apiData);
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
