@@ -19,7 +19,6 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import MUIRichTextEditor from "mui-rte";
-import Modal from "@material-ui/core/Modal";
 import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
 
 const defaultTheme = createMuiTheme();
@@ -55,18 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
   noLabel: {
     marginTop: theme.spacing(3),
-  },
-  paper: {
-    position: "absolute",
-    width: "85%",
-    height: "80vh",
-    overflow: "auto",
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #ccc",
-    boxShadow: theme.shadows[5],
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%,-50%)",
   },
 }));
 
@@ -114,22 +101,19 @@ export default function AddNews() {
   };
   const [imageId, setImageId] = React.useState("");
   const [featuredImage, setFeaturedImage] = React.useState("");
-  const sendDataToParent = (id, img) => {
+  const sendDataToParent = (id, img, modalStatus) => {
     // the callback. Use a better name
     //alert(index);
     setImageId(id);
     setFeaturedImage(img);
     console.log(imageId);
+    setOpen(modalStatus);
   };
 
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const [status, setStatus] = React.useState("active");
@@ -220,16 +204,9 @@ export default function AddNews() {
             >
               Add Image
             </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <div className={classes.paper}>
-                <MediaLibrary sendDataToParent={sendDataToParent} />
-              </div>
-            </Modal>
+
+            <MediaLibrary open={open} sendDataToParent={sendDataToParent} />
+
             <FormControl variant="filled" className={classes.formControl}>
               <InputLabel id="demo-simple-select-filled-label">
                 Status
