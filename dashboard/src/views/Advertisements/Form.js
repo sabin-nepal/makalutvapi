@@ -22,7 +22,6 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 import moment from "moment";
 
 import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
-import Modal from "@material-ui/core/Modal";
 
 const useStyles = makeStyles(styles);
 
@@ -113,7 +112,7 @@ export default function FormAdv(props) {
     }
   };
 
-  const sendDataToParent = (id, img) => {
+  const sendDataToParent = (id, img, modalStatus) => {
     if (!checkURL(img)) {
       setError("Only Support image");
     } else {
@@ -121,14 +120,10 @@ export default function FormAdv(props) {
       setImage(img);
       setError(null);
     }
-    setOpen(false);
+    setOpen(modalStatus);
   };
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const checkURL = (url) => {
@@ -239,19 +234,7 @@ export default function FormAdv(props) {
             >
               {image === "" ? "Add" : "Edit"} Image
             </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <div className={classes.paper}>
-                <MediaLibrary
-                  sendDataToParent={sendDataToParent}
-                  imageUrl={image}
-                />
-              </div>
-            </Modal>
+            <MediaLibrary open={open} sendDataToParent={sendDataToParent} />
             {image !== "" ? (
               <img src={image} alt={title} height="150" width="150" />
             ) : (

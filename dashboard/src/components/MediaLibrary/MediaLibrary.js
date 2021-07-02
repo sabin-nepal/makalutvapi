@@ -99,7 +99,7 @@ export default function MediaLibrary(props) {
   const handleClose = () => {
     setOpen(false);
     // eslint-disable-next-line react/prop-types
-    props.sendDataToParent(event.target.dataset.id, event.target.href, open);
+    props.sendDataToParent("", "", open);
   };
 
   const handleChange = (event, newValue) => {

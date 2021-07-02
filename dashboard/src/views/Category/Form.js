@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 //core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
-import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
@@ -68,7 +67,7 @@ export default function FormCategories(props) {
       console.log(error);
     }
   };
-  const sendDataToParent = (id, img) => {
+  const sendDataToParent = (id, img, modalStatus) => {
     if (!checkURL(img)) {
       setError("Only Support jpg/png format");
     } else {
@@ -76,14 +75,10 @@ export default function FormCategories(props) {
       setImage(img);
       setError(null);
     }
-    setOpen(false);
+    setOpen(modalStatus);
   };
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const checkURL = (url) => {
@@ -146,16 +141,9 @@ export default function FormCategories(props) {
             >
               {image === "" ? "Add" : "Edit"} Image
             </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <div className={classes.paper}>
-                <MediaLibrary sendDataToParent={sendDataToParent} />
-              </div>
-            </Modal>
+
+            <MediaLibrary open={open} sendDataToParent={sendDataToParent} />
+
             {image !== "" ? (
               <img src={image} alt={title} height="150" width="150" />
             ) : (
