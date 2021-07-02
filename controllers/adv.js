@@ -10,7 +10,7 @@ exports.create = async (req,res) => {
 		  msg: "StartDate And EndDate Cannot Be Empty",
 		});	
 	const adv =  await Adv.create({
-		title:title,
+		title:title.trim(),
 		mediumId:media,
 		status:status,
 		startDate:startDate,
@@ -114,7 +114,7 @@ exports.edit = async (req,res) => {
 		  msg: "Unauthorized.",
 		});
 	//await adv.removeMedia(adv.media)
-	adv.title = title
+	adv.title = title.trim()
 	adv.mediumId = media
 	adv.startDate = startDate
 	adv.endDate = endDate

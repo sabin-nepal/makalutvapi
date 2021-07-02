@@ -12,7 +12,7 @@ const Media = db.define("media", {
   path: Sequelize.TEXT,
   type: {
     type: Sequelize.STRING,
-    defaultValue: 'image',
+    defaultValue: 'thumbnail',
   },
   status: {
     type: Sequelize.STRING,

@@ -122,6 +122,7 @@ export default function FormNews(props) {
 
   React.useEffect(() => {
     getAllCategories();
+    console.log(setContent);
     if (news !== undefined) {
       setTitle(news.title);
       const contentHTML = convertFromHTML(news.content);
@@ -142,15 +143,15 @@ export default function FormNews(props) {
     }
   }, []);
   const getAllCategories = async () => {
-    const response = await axios.get("/category/all/-1");
-    let data = [];
-    response.data.map((category) => {
-      console.log(category);
-    });
-    setCategoriesList(data);
+    console.log(setCategoriesList);
+    // const response = await axios.get("/category/all/-1");
+    //let data = [];
+    // response.data.map((category) => {
+    //   console.log(category);
+    // });
+    //setCategoriesList(data);
   };
   const handleUpdate = async (event) => {
-    console.log(content);
     console.log(event);
     setError(null);
     setMessage(null);
@@ -163,7 +164,7 @@ export default function FormNews(props) {
     if (!poll) setPollTitle("");
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
     const apiData = `title=${title}&content=${content}&excerpt=${excerpt}
-    &category=7dcfd5f4-900c-4bda-a9d1-f623f43d8369&status=${status}&media=${imageId}
+    &category=${"7dcfd5f4-900c-4bda-a9d1-f623f43d8369"}&status=${status}&media=${imageId}
     &pollTitle=${pollTitle}`;
     const config = {
       method: "post",
@@ -215,7 +216,7 @@ export default function FormNews(props) {
     setPoll(event.target.value);
   };
   const getContent = (event) => {
-    console.log(JSON.stringify(convertToRaw(event.getCurrentContent())));
+    console.log(event);
     setContent(event.getCurrentContent().getPlainText());
   };
   return (
@@ -337,10 +338,7 @@ export default function FormNews(props) {
               aria-describedby="simple-modal-description"
             >
               <div className={classes.paper}>
-                <MediaLibrary
-                  sendDataToParent={sendDataToParent}
-                  imageUrl={featuredImage}
-                />
+                <MediaLibrary sendDataToParent={sendDataToParent} />
               </div>
             </Modal>
             <FormControl variant="filled" className={classes.formControl}>

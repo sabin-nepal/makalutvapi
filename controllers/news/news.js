@@ -25,7 +25,7 @@ exports.create = async (req,res) => {
 		notifyImage = thumbnail;
 	notifyImage = await getThumbnail(notifyImage);
 	const news =  await News.create({
-		title:title,
+		title:title.trim(),
 		content:content,
 		excerpt:excerpt,
 		status:status,

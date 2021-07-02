@@ -12,7 +12,7 @@ exports.create = async (req,res) => {
 		  msg: "Title cannot be empty.",
 		});
 	await Category.create({
-	    title:title,
+	    title:title.trim(),
 	    mediumId:media,
 	    userId:req.user.id,
 	    type:type,
@@ -134,7 +134,7 @@ exports.edit = async (req,res) => {
 		  success:false,
 		  msg: "Title cannot be empty.",
 		});
-	category.title = title;
+	category.title = title.trim();
 	category.mediumId = media;
 
 	await category.save();

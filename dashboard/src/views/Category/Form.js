@@ -153,10 +153,7 @@ export default function FormCategories(props) {
               aria-describedby="simple-modal-description"
             >
               <div className={classes.paper}>
-                <MediaLibrary
-                  sendDataToParent={sendDataToParent}
-                  imageUrl={image}
-                />
+                <MediaLibrary sendDataToParent={sendDataToParent} />
               </div>
             </Modal>
             {image !== "" ? (
