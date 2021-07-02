@@ -108,8 +108,6 @@ export default function MediaLibrary(props) {
 
   const handleDropChange = (filess) => {
     setFiles(filess);
-    console.log(filess);
-    //console.log(files);
   };
   const dropDelete = () => {
     setFiles([]);
@@ -118,7 +116,9 @@ export default function MediaLibrary(props) {
     setUploadLoading(true);
     const apiUrl = "/media/upload";
     const data = new FormData();
-    data.append("media", files);
+    files.map((file) => {
+      data.append("media", file);
+    });
     const config = {
       method: "post",
       url: apiUrl,
@@ -130,7 +130,8 @@ export default function MediaLibrary(props) {
     };
     try {
       const { data } = await axios(config);
-      console.log(data.msg);
+      setUploadLoading(false);
+      console.log(data);
     } catch (error) {
       setUploadLoading(false);
       console.log(error);
