@@ -90,6 +90,7 @@ export default function FormNews(props) {
   const data = props;
   const news = data.location.state;
   const [category, setCategory] = React.useState([]);
+  const [categoryId, setCategoryIdList] = React.useState([]);
   const [categories, setCategoriesList] = React.useState([]);
   const [title, setTitle] = React.useState("");
   const [pollTitle, setPollTitle] = React.useState("");
@@ -104,11 +105,17 @@ export default function FormNews(props) {
   const [btnLoading, setBtnLoading] = React.useState(0);
   const token = localStorage.getItem("token");
   const handleChange = (event) => {
-    setCategory(event.target.value);
+    var catId = [];
+    var targetValue = [];
+    event.target.value.map((cat) => {
+      catId.push(cat.id);
+      targetValue.push(cat);
+    });
+    setCategory(targetValue);
+    setCategoryIdList(catId);
   };
   const [imageId, setImageId] = React.useState("");
   const [featuredImage, setFeaturedImage] = React.useState("");
-
   React.useEffect(() => {
     getAllCategories();
     if (news !== undefined) {
@@ -128,37 +135,38 @@ export default function FormNews(props) {
       setImageId(news.media[0].id);
       setStatus(news.status);
       setFeaturedImage(news.media[0]["path"]);
-      //setCategory(news.category);
+      var catId = [];
+      news.categories.map((cat) => {
+        catId.push(cat);
+      });
+      setCategoryIdList(catId);
+      setCategory(news.categories);
     }
   }, []);
   const getAllCategories = async () => {
-    console.log(setCategoriesList);
-    // const response = await axios.get("/category/all/-1");
-    //let data = [];
-    // response.data.map((category) => {
-    //   console.log(category);
-    // });
-    //setCategoriesList(data);
+    const response = await axios.get("/category/all/-1");
+    setCategoriesList(response.data);
   };
   const handleUpdate = async (event) => {
     console.log(event);
     var newsType = "news";
+    console.log(categoryId);
+    if (!poll) setPollTitle("");
+    else newsType = "poll";
     setError(null);
     setMessage(null);
     setBtnLoading(1);
-    console.log(imageId);
-    console.log(richText);
-    if (title === "") {
+    if (title === "" || richText === "" || imageId === "") {
       setBtnLoading(0);
-      setError("Title required");
+      setError("All FIeld required");
       return;
     }
-    if (!poll) setPollTitle("thi si yau");
-    else newsType = "poll";
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
-    const apiData = `title=${title}&content=${excerpt}&excerpt=${excerpt}
-    &category=7dcfd5f4-900c-4bda-a9d1-f623f43d8369&status=${status}&media=${imageId}
-    &pollTitle=${"this is"}&type=${newsType}`;
+    const apiData = `title=${title}&content=${richText}&excerpt=${excerpt}
+    &category=${[
+      "875f1e23-9869-4a8d-a997-1f87b693e3e3,7dcfd5f4-900c-4bda-a9d1-f623f43d8369",
+    ]}&status=${status}&media=${imageId}
+    &pollTitle=${pollTitle}&type=${newsType}`;
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
@@ -170,7 +178,7 @@ export default function FormNews(props) {
     };
     try {
       const response = await axios(config);
-      setMessage(response.msg);
+      setMessage(response.data.msg);
       setBtnLoading(0);
     } catch (error) {
       setError("Unable to Update News");
@@ -281,8 +289,8 @@ export default function FormNews(props) {
                   <div className={classes.chips}>
                     {selected.map((value) => (
                       <Chip
-                        key={value.id}
-                        label={value.id}
+                        key={value["id"]}
+                        label={value["title"]}
                         className={classes.chip}
                       />
                     ))}
@@ -292,11 +300,11 @@ export default function FormNews(props) {
               >
                 {categories.map((name) => (
                   <MenuItem
-                    key={name}
+                    key={name["id"]}
                     value={name}
-                    style={getStyles(name, category, theme)}
+                    style={getStyles(name, categories, theme)}
                   >
-                    {name}
+                    {name["title"]}
                   </MenuItem>
                 ))}
               </Select>
