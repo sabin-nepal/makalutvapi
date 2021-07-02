@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "chartist": "0.10.1",
     "classnames": "2.3.1",
+    "draftjs-to-html": "^0.9.1",
     "history": "5.0.0",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",

@@ -17,7 +17,7 @@ const{
 
 router.route('/').get(getAll);
 router.route('/:id').get(getMediaById);
-router.route('/delete/:id').post(protect,deletes);
+router.route('/:id').delete(protect,deletes);
 
 //upload
 

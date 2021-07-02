@@ -34,6 +34,7 @@ export default function FormCategories(props) {
     if (category !== undefined) {
       setTitle(category.title);
       setImage(category.medium["path"]);
+      setImageId(category.mediumId);
     }
   }, []);
   const handleUpdate = async (event) => {
@@ -41,9 +42,9 @@ export default function FormCategories(props) {
     setError(null);
     setMessage(null);
     setBtnLoading(1);
-    if (title === "") {
+    if (title === "" || imageId === "") {
       setBtnLoading(0);
-      setError("Title required");
+      setError("All Fields required");
       return;
     }
     const apiUrl = category === undefined ? "create" : "edit/" + category.id;
@@ -89,7 +90,7 @@ export default function FormCategories(props) {
     <Card>
       <CardHeader color="info">
         <h4 className={classes.cardTitleWhite}>
-          {category === undefined ? "Add" : "Update"}Category
+          {category === undefined ? "Add" : "Update"} Category
         </h4>
       </CardHeader>
       <CardBody>

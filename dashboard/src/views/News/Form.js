@@ -11,6 +11,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Input from "@material-ui/core/Input";
 import Chip from "@material-ui/core/Chip";
 import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -20,9 +21,9 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import MUIRichTextEditor from "mui-rte";
-import Modal from "@material-ui/core/Modal";
 import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
 import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import Alert from "@material-ui/lab/Alert";
 
 const defaultTheme = createMuiTheme();
@@ -59,19 +60,6 @@ const useStyles = makeStyles((theme) => ({
   noLabel: {
     marginTop: theme.spacing(3),
   },
-  paper: {
-    position: "absolute",
-    width: "85%",
-    height: "80vh",
-    overflow: "auto",
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%,-50%)",
-  },
 }));
 
 //const useStyles2 = makeStyles(styles);
@@ -102,10 +90,12 @@ export default function FormNews(props) {
   const data = props;
   const news = data.location.state;
   const [category, setCategory] = React.useState([]);
+  const [categoryId, setCategoryIdList] = React.useState([]);
   const [categories, setCategoriesList] = React.useState([]);
   const [title, setTitle] = React.useState("");
   const [pollTitle, setPollTitle] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [richText, setRichText] = React.useState("");
   const [excerpt, setExcerpt] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [poll, setPoll] = React.useState(false);
@@ -115,14 +105,19 @@ export default function FormNews(props) {
   const [btnLoading, setBtnLoading] = React.useState(0);
   const token = localStorage.getItem("token");
   const handleChange = (event) => {
-    setCategory(event.target.value);
+    var catId = [];
+    var targetValue = [];
+    event.target.value.map((cat) => {
+      catId.push(cat.id);
+      targetValue.push(cat);
+    });
+    setCategory(targetValue);
+    setCategoryIdList(catId);
   };
   const [imageId, setImageId] = React.useState("");
   const [featuredImage, setFeaturedImage] = React.useState("");
-
   React.useEffect(() => {
     getAllCategories();
-    console.log(setContent);
     if (news !== undefined) {
       setTitle(news.title);
       const contentHTML = convertFromHTML(news.content);
@@ -133,39 +128,45 @@ export default function FormNews(props) {
       const content = JSON.stringify(convertToRaw(state));
       setContent(content);
       setExcerpt(news.excerpt);
-      if (news.pollTitle !== "") {
+      if (news.type === "poll") {
         setPoll(true);
         setPollTitle(news.pollTitle);
       }
+      setImageId(news.media[0].id);
       setStatus(news.status);
       setFeaturedImage(news.media[0]["path"]);
-      //setCategory(news.category);
+      var catId = [];
+      news.categories.map((cat) => {
+        catId.push(cat);
+      });
+      setCategoryIdList(catId);
+      setCategory(news.categories);
     }
   }, []);
   const getAllCategories = async () => {
-    console.log(setCategoriesList);
-    // const response = await axios.get("/category/all/-1");
-    //let data = [];
-    // response.data.map((category) => {
-    //   console.log(category);
-    // });
-    //setCategoriesList(data);
+    const response = await axios.get("/category/all/-1");
+    setCategoriesList(response.data);
   };
   const handleUpdate = async (event) => {
     console.log(event);
+    var newsType = "news";
+    console.log(categoryId);
+    if (!poll) setPollTitle("");
+    else newsType = "poll";
     setError(null);
     setMessage(null);
     setBtnLoading(1);
-    if (title === "") {
+    if (title === "" || richText === "" || imageId === "") {
       setBtnLoading(0);
-      setError("Title required");
+      setError("All FIeld required");
       return;
     }
-    if (!poll) setPollTitle("");
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
-    const apiData = `title=${title}&content=${content}&excerpt=${excerpt}
-    &category=${"7dcfd5f4-900c-4bda-a9d1-f623f43d8369"}&status=${status}&media=${imageId}
-    &pollTitle=${pollTitle}`;
+    const apiData = `title=${title}&content=${richText}&excerpt=${excerpt}
+    &category=${[
+      "875f1e23-9869-4a8d-a997-1f87b693e3e3,7dcfd5f4-900c-4bda-a9d1-f623f43d8369",
+    ]}&status=${status}&media=${imageId}
+    &pollTitle=${pollTitle}&type=${newsType}`;
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
@@ -176,8 +177,8 @@ export default function FormNews(props) {
       data: apiData,
     };
     try {
-      const { response } = await axios(config);
-      setMessage(response.msg);
+      const response = await axios(config);
+      setMessage(response.data.msg);
       setBtnLoading(0);
     } catch (error) {
       setError("Unable to Update News");
@@ -204,10 +205,6 @@ export default function FormNews(props) {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleChangeStatus = (event) => {
     setStatus(event.target.value);
   };
@@ -216,8 +213,7 @@ export default function FormNews(props) {
     setPoll(event.target.value);
   };
   const getContent = (event) => {
-    console.log(event);
-    setContent(event.getCurrentContent().getPlainText());
+    setRichText(draftToHtml(convertToRaw(event.getCurrentContent())));
   };
   return (
     <Card>
@@ -253,16 +249,13 @@ export default function FormNews(props) {
                 label="Type something here..."
               />
             </MuiThemeProvider>
-            <CustomInput
-              labelText="Short Description"
+            <TextField
+              placeholder="Short Description"
+              multiline
+              rows={2}
               id="excerpt"
-              inputProps={{
-                value: excerpt,
-              }}
-              formControlProps={{
-                fullWidth: true,
-                onChange: (event) => setExcerpt(event.target.value),
-              }}
+              value={excerpt}
+              onChange={(event) => setExcerpt(event.target.value)}
             />
             <Button
               type="submit"
@@ -296,8 +289,8 @@ export default function FormNews(props) {
                   <div className={classes.chips}>
                     {selected.map((value) => (
                       <Chip
-                        key={value.id}
-                        label={value.id}
+                        key={value["id"]}
+                        label={value["title"]}
                         className={classes.chip}
                       />
                     ))}
@@ -307,11 +300,11 @@ export default function FormNews(props) {
               >
                 {categories.map((name) => (
                   <MenuItem
-                    key={name}
+                    key={name["id"]}
                     value={name}
-                    style={getStyles(name, category, theme)}
+                    style={getStyles(name, categories, theme)}
                   >
-                    {name}
+                    {name["title"]}
                   </MenuItem>
                 ))}
               </Select>
@@ -331,16 +324,7 @@ export default function FormNews(props) {
             >
               {featuredImage === "" ? "Add" : "Edit"} Image
             </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <div className={classes.paper}>
-                <MediaLibrary sendDataToParent={sendDataToParent} />
-              </div>
-            </Modal>
+            <MediaLibrary open={open} sendDataToParent={sendDataToParent} />
             <FormControl variant="filled" className={classes.formControl}>
               <InputLabel id="demo-simple-select-filled-label">
                 Status
@@ -370,7 +354,7 @@ export default function FormNews(props) {
             {poll && (
               <CustomInput
                 labelText="Poll Title"
-                id="float"
+                id="poll-title"
                 inputProps={{
                   value: pollTitle,
                 }}

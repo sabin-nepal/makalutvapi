@@ -52,6 +52,7 @@ export default function FormAdv(props) {
       );
       setTitle(adv.title);
       setImage(adv.medium["path"]);
+      setImageId(adv.mediumId);
       setUrl(adv.url);
       setStatus(adv.status);
       setStart(sDate);
@@ -84,6 +85,11 @@ export default function FormAdv(props) {
     if (endDate === "") {
       setBtnLoading(0);
       setError("End date required");
+      return;
+    }
+    if (imageId === "") {
+      setBtnLoading(0);
+      setError("Image  required");
       return;
     }
     const advData = `title=${title}&status=${status}&startDate=${startDate}

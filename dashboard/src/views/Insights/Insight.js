@@ -55,8 +55,8 @@ export default function Insight() {
   const token = localStorage.getItem("token");
   const deleteData = async (value) => {
     const config = {
-      method: "post",
-      url: "/insight/delete/" + value,
+      method: "delete",
+      url: "/inisght/" + value,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,

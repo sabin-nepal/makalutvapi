@@ -4,10 +4,10 @@ const Media = require('../models/Media')
 exports.create = async (req,res) => {
 
 	const { title,url,media,startDate,endDate,status,type='banner'} = req.body
-	if(!startDate || !endDate)
+	if(!startDate || !endDate || !media)
 		return res.status(406).json({
 		  success: false,
-		  msg: "StartDate And EndDate Cannot Be Empty",
+		  msg: "Media, StartDate And EndDate Cannot Be Empty",
 		});	
 	const adv =  await Adv.create({
 		title:title.trim(),
@@ -113,6 +113,11 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
+	if(!startDate || !endDate || !media)
+		return res.status(406).json({
+			success: false,
+			msg: "Media, StartDate And EndDate Cannot Be Empty",
+		});		
 	//await adv.removeMedia(adv.media)
 	adv.title = title.trim()
 	adv.mediumId = media

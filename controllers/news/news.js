@@ -20,10 +20,10 @@ exports.create = async (req,res) => {
 	// 	  msg: "Thumbnail Required.",
 	// 	});
 	// }
-	notifyImage = media;
-	if(thumbnail)
-		notifyImage = thumbnail;
-	notifyImage = await getThumbnail(notifyImage);
+// 	var thumbnailImage = media;
+// 	if(thumbnail)
+// 		thumbnailImage = thumbnail;
+	//notifyImage = await getThumbnail(thumbnailImage);
 	const news =  await News.create({
 		title:title.trim(),
 		content:content,
@@ -178,6 +178,9 @@ exports.edit = async (req,res) => {
 		    	{
 		    	 model: Category,
 		    	},
+				{
+					model: Media,
+				   },
 		    ]
 	});
 	if(!news)
@@ -190,6 +193,13 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Title , content or media cannot be empty.",
 		});
+	if(news.type!=='poll' && type=='poll'){
+    	await PollResult.create({
+    		yesCount:0,
+    		noCount:0,
+    		newsId:news.id,
+    	})
+	}
 	await news.removeCategory(news.categories)
 	await news.removeMedia(news.media)
 	news.title = title
@@ -197,6 +207,7 @@ exports.edit = async (req,res) => {
 	news.excerpt = excerpt
 	news.status = status
 	news.pollTitle = pollTitle
+	news.type = type
 	await news.addCategory(category, { through: { selfGranted: false } });
 	await news.addMedia(media, { through: { selfGranted: false } });
 	await news.save();

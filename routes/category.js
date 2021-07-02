@@ -15,6 +15,6 @@ router.route('/create').post(protect,create);
 router.route('/:type/:limit').get(getAll);
 router.route('/news/limit/:limit').get(getNews);
 router.route('/edit/:id').post(protect,edit);
-router.route('/delete/:id').post(protect,deletes);
+router.route('/:id').delete(protect,deletes);
 
 module.exports = router; 
