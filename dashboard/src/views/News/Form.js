@@ -150,6 +150,7 @@ export default function FormNews(props) {
     setCategoriesList(data);
   };
   const handleUpdate = async (event) => {
+    console.log(content);
     console.log(event);
     setError(null);
     setMessage(null);
@@ -163,7 +164,7 @@ export default function FormNews(props) {
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
     const apiData = `title=${title}&content=${content}&excerpt=${excerpt}
     &category=7dcfd5f4-900c-4bda-a9d1-f623f43d8369&status=${status}&media=${imageId}
-    &pollTitle=${pollTitle}&content=${content}`;
+    &pollTitle=${pollTitle}`;
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
@@ -213,6 +214,10 @@ export default function FormNews(props) {
   const handleChangePoll = (event) => {
     setPoll(event.target.value);
   };
+  const getContent = (event) => {
+    console.log(JSON.stringify(convertToRaw(event.getCurrentContent())));
+    setContent(event.getCurrentContent().getPlainText());
+  };
   return (
     <Card>
       <CardHeader color="info">
@@ -243,6 +248,7 @@ export default function FormNews(props) {
             <MuiThemeProvider theme={defaultTheme}>
               <MUIRichTextEditor
                 value={content}
+                onChange={getContent}
                 label="Type something here..."
               />
             </MuiThemeProvider>
