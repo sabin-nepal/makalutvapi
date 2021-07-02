@@ -23,6 +23,7 @@ import MUIRichTextEditor from "mui-rte";
 import Modal from "@material-ui/core/Modal";
 import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
 import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import Alert from "@material-ui/lab/Alert";
 
 const defaultTheme = createMuiTheme();
@@ -106,6 +107,7 @@ export default function FormNews(props) {
   const [title, setTitle] = React.useState("");
   const [pollTitle, setPollTitle] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [richText, setRichText] = React.useState("");
   const [excerpt, setExcerpt] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [poll, setPoll] = React.useState(false);
@@ -133,7 +135,7 @@ export default function FormNews(props) {
       const content = JSON.stringify(convertToRaw(state));
       setContent(content);
       setExcerpt(news.excerpt);
-      if (news.pollTitle !== "") {
+      if (news.type === "poll") {
         setPoll(true);
         setPollTitle(news.pollTitle);
       }
@@ -153,19 +155,23 @@ export default function FormNews(props) {
   };
   const handleUpdate = async (event) => {
     console.log(event);
+    let newsType;
     setError(null);
     setMessage(null);
     setBtnLoading(1);
+    console.log(richText);
     if (title === "") {
       setBtnLoading(0);
       setError("Title required");
       return;
     }
     if (!poll) setPollTitle("");
+    else newsType = "poll";
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
-    const apiData = `title=${title}&content=${content}&excerpt=${excerpt}
-    &category=${"7dcfd5f4-900c-4bda-a9d1-f623f43d8369"}&status=${status}&media=${imageId}
-    &pollTitle=${pollTitle}`;
+    console.log(apiUrl);
+    const apiData = `title=${title}&content=${excerpt}&excerpt=${excerpt}
+    &category=7dcfd5f4-900c-4bda-a9d1-f623f43d8369&status=${status}&media=${imageId}
+    &pollTitle=${pollTitle}&type=${newsType}`;
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
@@ -176,7 +182,7 @@ export default function FormNews(props) {
       data: apiData,
     };
     try {
-      const { response } = await axios(config);
+      const response = await axios(config);
       setMessage(response.msg);
       setBtnLoading(0);
     } catch (error) {
@@ -216,8 +222,7 @@ export default function FormNews(props) {
     setPoll(event.target.value);
   };
   const getContent = (event) => {
-    console.log(event);
-    setContent(event.getCurrentContent().getPlainText());
+    setRichText(draftToHtml(convertToRaw(event.getCurrentContent())));
   };
   return (
     <Card>
@@ -370,7 +375,7 @@ export default function FormNews(props) {
             {poll && (
               <CustomInput
                 labelText="Poll Title"
-                id="float"
+                id="poll-title"
                 inputProps={{
                   value: pollTitle,
                 }}

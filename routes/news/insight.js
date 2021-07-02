@@ -20,5 +20,5 @@ router.route('/limit/:limit').get(getLimit);
 router.route('/:id').get(getSingle);
 router.route('/create').post(protect,create);
 router.route('/edit/:id').post(protect,edit);
-router.route('/delete/:id').post(protect,deletes);
+router.route('/:id').delete(protect,deletes);
 module.exports = router; 

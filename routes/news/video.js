@@ -16,5 +16,5 @@ router.route('/').get(getAll);
 router.route('/all').get(protect,getVideos);
 router.route('/create').post(protect,create);
 router.route('/edit/:id').post(protect,edit);
-router.route('/delete/:id').post(protect,deletes);
+router.route('/:id').delete(protect,deletes);
 module.exports = router; 

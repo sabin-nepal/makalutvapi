@@ -64,8 +64,8 @@ export default function News() {
   };
   const deleteData = async (value) => {
     const config = {
-      method: "post",
-      url: "/news/delete/" + value,
+      method: "delete",
+      url: "/" + value,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,

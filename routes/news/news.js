@@ -26,7 +26,7 @@ router.route('/type/:type/:limit').get(getTypeLimit);
 router.route('/:id').get(getSingle);
 router.route('/edit/:id').post(protect,edit);
 router.route('/create').post(protect,create);
-router.route('/delete/:id').post(protect,deletes);
+router.route('/:id').delete(protect,deletes);
 router.route('/vote/:id').post(vote);
 router.route('/vote/:id').get(getVoteResult);
 router.route('/category/:id/:limit').get(getCategoryNews);

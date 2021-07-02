@@ -55,8 +55,8 @@ export default function Category() {
   const token = localStorage.getItem("token");
   const deleteData = async (value) => {
     const config = {
-      method: "post",
-      url: "/category/delete/" + value,
+      method: "delete",
+      url: "/" + value,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,
