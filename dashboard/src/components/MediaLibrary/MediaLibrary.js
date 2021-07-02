@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { DropzoneArea } from "material-ui-dropzone";
 import axios from "axios";
+const token = localStorage.getItem("token");
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,6 +55,7 @@ export default function MediaLibrary(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [files, setFiles] = useState([]);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [mediaList, setMediaList] = useState([]);
   const [mediaId, setMediaId] = useState(0);
   const mediaStyles = {
@@ -87,20 +89,39 @@ export default function MediaLibrary(props) {
   const handleDropChange = (filess) => {
     setFiles(filess);
     console.log(filess);
-    console.log(files);
+    //console.log(files);
   };
   const dropDelete = () => {
     setFiles([]);
   };
-  const handleUpload = () => {
-    console.log("uploaded");
+  const handleUpload = async () => {
+    setUploadLoading(true);
+    const apiUrl = "/media/upload";
+    const data = new FormData();
+    data.append("media", files);
+    const config = {
+      method: "post",
+      url: apiUrl,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: "Bearer " + token,
+      },
+      data: data,
+    };
+    try {
+      const { data } = await axios(config);
+      console.log(data.msg);
+    } catch (error) {
+      setUploadLoading(false);
+      console.log(error);
+    }
   };
   const handleClick = (event, key) => {
     //event.stopPropagation();
     event.preventDefault();
     //event.nativeEvent.stopImmediatePropagation();
     setMediaId(key);
-    alert(mediaId);
+    //alert(mediaId);
     // eslint-disable-next-line react/prop-types
     props.sendDataToParent(event.target.dataset.id, event.target.href);
     //sendDataToParent(event.target.mediaId);
@@ -108,7 +129,7 @@ export default function MediaLibrary(props) {
 
   useEffect(() => {
     getAllMedia();
-    console.log(mediaList);
+    //console.log(mediaList);
   }, []);
   const getAllMedia = async () => {
     const response = await axios.get("/media");
@@ -180,7 +201,7 @@ export default function MediaLibrary(props) {
             variant="contained"
             color="primary"
             onClick={handleUpload}
-            disabled={files.length < 1 ? true : false}
+            disabled={files.length < 1 || uploadLoading ? true : false}
           >
             Upload
           </Button>
