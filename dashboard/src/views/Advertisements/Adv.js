@@ -55,8 +55,8 @@ export default function Adv() {
   const token = localStorage.getItem("token");
   const deleteData = async (value) => {
     const config = {
-      method: "post",
-      url: "/adv/delete/" + value,
+      method: "delete",
+      url: "/adv/" + value,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,

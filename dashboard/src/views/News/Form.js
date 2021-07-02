@@ -11,6 +11,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Input from "@material-ui/core/Input";
 import Chip from "@material-ui/core/Chip";
 import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -20,7 +21,6 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import MUIRichTextEditor from "mui-rte";
-import Modal from "@material-ui/core/Modal";
 import MediaLibrary from "../../components/MediaLibrary/MediaLibrary.js";
 import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
@@ -59,19 +59,6 @@ const useStyles = makeStyles((theme) => ({
   },
   noLabel: {
     marginTop: theme.spacing(3),
-  },
-  paper: {
-    position: "absolute",
-    width: "85%",
-    height: "80vh",
-    overflow: "auto",
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%,-50%)",
   },
 }));
 
@@ -124,7 +111,6 @@ export default function FormNews(props) {
 
   React.useEffect(() => {
     getAllCategories();
-    console.log(setContent);
     if (news !== undefined) {
       setTitle(news.title);
       const contentHTML = convertFromHTML(news.content);
@@ -139,6 +125,7 @@ export default function FormNews(props) {
         setPoll(true);
         setPollTitle(news.pollTitle);
       }
+      setImageId(news.media[0].id);
       setStatus(news.status);
       setFeaturedImage(news.media[0]["path"]);
       //setCategory(news.category);
@@ -155,23 +142,23 @@ export default function FormNews(props) {
   };
   const handleUpdate = async (event) => {
     console.log(event);
-    let newsType;
+    var newsType = "news";
     setError(null);
     setMessage(null);
     setBtnLoading(1);
+    console.log(imageId);
     console.log(richText);
     if (title === "") {
       setBtnLoading(0);
       setError("Title required");
       return;
     }
-    if (!poll) setPollTitle("");
+    if (!poll) setPollTitle("thi si yau");
     else newsType = "poll";
     const apiUrl = news === undefined ? "create" : "edit/" + news.id;
-    console.log(apiUrl);
     const apiData = `title=${title}&content=${excerpt}&excerpt=${excerpt}
     &category=7dcfd5f4-900c-4bda-a9d1-f623f43d8369&status=${status}&media=${imageId}
-    &pollTitle=${pollTitle}&type=${newsType}`;
+    &pollTitle=${"this is"}&type=${newsType}`;
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
@@ -208,10 +195,6 @@ export default function FormNews(props) {
   };
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const handleChangeStatus = (event) => {
@@ -258,16 +241,13 @@ export default function FormNews(props) {
                 label="Type something here..."
               />
             </MuiThemeProvider>
-            <CustomInput
-              labelText="Short Description"
+            <TextField
+              placeholder="Short Description"
+              multiline
+              rows={2}
               id="excerpt"
-              inputProps={{
-                value: excerpt,
-              }}
-              formControlProps={{
-                fullWidth: true,
-                onChange: (event) => setExcerpt(event.target.value),
-              }}
+              value={excerpt}
+              onChange={(event) => setExcerpt(event.target.value)}
             />
             <Button
               type="submit"
@@ -336,16 +316,7 @@ export default function FormNews(props) {
             >
               {featuredImage === "" ? "Add" : "Edit"} Image
             </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <div className={classes.paper}>
-                <MediaLibrary sendDataToParent={sendDataToParent} />
-              </div>
-            </Modal>
+            <MediaLibrary open={open} sendDataToParent={sendDataToParent} />
             <FormControl variant="filled" className={classes.formControl}>
               <InputLabel id="demo-simple-select-filled-label">
                 Status

@@ -56,7 +56,7 @@ export default function Insight() {
   const deleteData = async (value) => {
     const config = {
       method: "delete",
-      url: "/" + value,
+      url: "/inisght/" + value,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,

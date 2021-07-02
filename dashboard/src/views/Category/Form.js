@@ -90,7 +90,7 @@ export default function FormCategories(props) {
     <Card>
       <CardHeader color="info">
         <h4 className={classes.cardTitleWhite}>
-          {category === undefined ? "Add" : "Update"}Category
+          {category === undefined ? "Add" : "Update"} Category
         </h4>
       </CardHeader>
       <CardBody>
