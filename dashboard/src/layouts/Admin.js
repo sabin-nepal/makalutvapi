@@ -17,6 +17,7 @@ import AddNews from "../views/News/Add.js";
 import FormCategories from "../views/Category/Form.js";
 import FormAdv from "../views/Advertisements/Form.js";
 import FormNews from "../views/News/Form.js";
+import FormVideos from "../views/Videos/Form.js";
 import MakaluMediaWrapperr from "../views/Media/MediaLibrary.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
@@ -45,6 +46,7 @@ const switchRoutes = (
     <PrivateRoute path="/admin/form/category" component={FormCategories} />
     <PrivateRoute path="/admin/form/adv" component={FormAdv} />
     <PrivateRoute path="/admin/form/news" component={FormNews} />
+    <PrivateRoute path="/admin/form/video" component={FormVideos} />
     <PrivateRoute path="/admin/media" component={MakaluMediaWrapperr} />
     <Redirect from="/admin" to="/admin/login" />
   </Switch>
