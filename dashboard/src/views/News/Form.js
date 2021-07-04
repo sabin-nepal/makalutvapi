@@ -113,8 +113,6 @@ export default function FormNews(props) {
     });
     setCategory(targetValue);
     setCategoryIdList(catId);
-    console.log(category);
-    console.log(categories);
   };
   const [imageId, setImageId] = React.useState("");
   const [featuredImage, setFeaturedImage] = React.useState("");
