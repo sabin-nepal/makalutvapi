@@ -3,18 +3,20 @@ import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 //import InputAdornment from "@material-ui/core/InputAdornment";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 //import People from "@material-ui/icons/People";
 //core components
 import CustomInput from "components/CustomInput/CustomInput.js";
-import Input from "@material-ui/core/Input";
-import Chip from "@material-ui/core/Chip";
+//import Input from "@material-ui/core/Input";
+//import Chip from "@material-ui/core/Chip";
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
@@ -64,35 +66,35 @@ const useStyles = makeStyles((theme) => ({
 
 //const useStyles2 = makeStyles(styles);
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//   PaperProps: {
+//     style: {
+//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+//       width: 250,
+//     },
+//   },
+// };
 
-function getStyles(name, category, theme) {
-  return {
-    fontWeight:
-      category.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+// function getStyles(name, category, theme) {
+//   return {
+//     fontWeight:
+//       category.indexOf(name["id"]) === -1
+//         ? theme.typography.fontWeightRegular
+//         : theme.typography.fontWeightMedium,
+//   };
+// }
 
 export default function FormNews(props) {
-  const theme = useTheme();
   const classes = useStyles();
   const data = props;
   const news = data.location.state;
-  const [category, setCategory] = React.useState([]);
+  //const [category, setCategory] = React.useState([]);
   const [categoryId, setCategoryIdList] = React.useState([]);
   const [categories, setCategoriesList] = React.useState([]);
   const [title, setTitle] = React.useState("");
+  //const [checked, setCheck] = React.useState(false);
   const [pollTitle, setPollTitle] = React.useState("");
   const [content, setContent] = React.useState("");
   const [richText, setRichText] = React.useState("");
@@ -105,19 +107,17 @@ export default function FormNews(props) {
   const [btnLoading, setBtnLoading] = React.useState(0);
   const token = localStorage.getItem("token");
   const handleChange = (event) => {
-    var catId = [];
-    var targetValue = [];
-    event.target.value.map((cat) => {
-      catId.push(cat.id);
-      targetValue.push(cat);
-    });
-    setCategory(targetValue);
+    var catId = categoryId;
+    if (catId === "" || !catId.includes(event.target.value)) {
+      catId.push(event.target.value);
+    } else {
+      catId.splice(event.target.value, 1);
+    }
     setCategoryIdList(catId);
   };
   const [imageId, setImageId] = React.useState("");
   const [featuredImage, setFeaturedImage] = React.useState("");
   React.useEffect(() => {
-    getAllCategories();
     if (news !== undefined) {
       setTitle(news.title);
       const contentHTML = convertFromHTML(news.content);
@@ -137,20 +137,29 @@ export default function FormNews(props) {
       setFeaturedImage(news.media[0]["path"]);
       var catId = [];
       news.categories.map((cat) => {
-        catId.push(cat);
+        catId.push(cat.id);
       });
       setCategoryIdList(catId);
-      setCategory(news.categories);
+      //setCategory(catList);
     }
+    getAllCategories();
   }, []);
   const getAllCategories = async () => {
     const response = await axios.get("/category/all/-1");
-    setCategoriesList(response.data);
+    var setCat = [];
+    console.log(categoryId);
+    response.data.map((cat) => {
+      setCat.push({
+        id: cat.id,
+        title: cat.title,
+        isChecked: categoryId.includes(cat.id),
+      });
+    });
+    setCategoriesList(setCat);
   };
   const handleUpdate = async (event) => {
     console.log(event);
     var newsType = "news";
-    console.log(categoryId);
     if (!poll) setPollTitle("");
     else newsType = "poll";
     setError(null);
@@ -169,7 +178,6 @@ export default function FormNews(props) {
     apiData += `&title=${title}&content=${richText}&excerpt=${excerpt}
     &status=${status}&media=${imageId}
     &pollTitle=${pollTitle}&type=${newsType}`;
-    console.log(apiData);
     const config = {
       method: "post",
       url: "/news/" + apiUrl,
@@ -279,9 +287,29 @@ export default function FormNews(props) {
             </Button>
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
+            {categories.map(
+              (name) => (
+                console.log(name.isChecked),
+                (
+                  <FormControlLabel
+                    key={name["id"]}
+                    control={
+                      <Checkbox
+                        id={name["id"]}
+                        checked={name.isChecked}
+                        value={name["id"]}
+                        onChange={handleChange}
+                      />
+                    }
+                    label={name["title"]}
+                  />
+                )
+              )
+            )}
+
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Category</InputLabel>
-              <Select
+              {/* <Select
                 labelId="demo-mutiple-chip-label"
                 id="demo-mutiple-chip"
                 multiple
@@ -302,15 +330,16 @@ export default function FormNews(props) {
                 MenuProps={MenuProps}
               >
                 {categories.map((name) => (
-                  <MenuItem
-                    key={name["id"]}
-                    value={name}
-                    style={getStyles(name, categories, theme)}
-                  >
-                    {name["title"]}
-                  </MenuItem>
+                  
+                  // <MenuItem
+                  //   key={name["id"]}
+                  //   value={name}
+                  //   style={getStyles(name, categories, theme)}
+                  // >
+                  //   {name["title"]}
+                  // </MenuItem>
                 ))}
-              </Select>
+              </Select> */}
             </FormControl>
             {featuredImage !== "" ? (
               <img src={featuredImage} style={{ maxWidth: "100%" }} />
