@@ -107,11 +107,13 @@ export default function FormNews(props) {
   const [btnLoading, setBtnLoading] = React.useState(0);
   const token = localStorage.getItem("token");
   const handleChange = (event) => {
-    var catId = categoryId;
+    var catId = [...categoryId];
+    console.log(catId, event.target.value);
     if (catId === "" || !catId.includes(event.target.value)) {
       catId.push(event.target.value);
     } else {
-      catId.splice(event.target.value, 1);
+      var index = catId.indexOf(event.target.value);
+      catId.splice(index, 1);
     }
     setCategoryIdList(catId);
   };
@@ -143,7 +145,8 @@ export default function FormNews(props) {
       //setCategory(catList);
     }
     getAllCategories();
-  }, []);
+    // eslint-disable-next-line react/prop-types
+  }, [props.location.state]);
   const getAllCategories = async () => {
     const response = await axios.get("/category/all/-1");
     var setCat = [];
@@ -154,6 +157,7 @@ export default function FormNews(props) {
         title: cat.title,
         isChecked: categoryId.includes(cat.id),
       });
+      console.log(categoryId.includes(cat.id));
     });
     setCategoriesList(setCat);
   };
@@ -296,7 +300,7 @@ export default function FormNews(props) {
                     control={
                       <Checkbox
                         id={name["id"]}
-                        checked={name.isChecked}
+                        checked={categoryId.includes(name["id"])}
                         value={name["id"]}
                         onChange={handleChange}
                       />
