@@ -66,26 +66,31 @@ export default function FormInsights(props) {
     }
   };
   const sendDataToParent = (id, img) => {
-    console.log(id);
-    console.log(img);
-    if (!checkURL(img)) {
-      setError("Only Support images");
-    } else {
-      setImageId(id);
-      setImages(img);
-      setError(null);
-    }
+    img.map((image) => {
+      if (image.match(/\.(jpeg|jpg|png|gif)$/) == null) {
+        removeA(img, image);
+      }
+    });
+    setImageId(id);
+    setImages(img);
     setOpen(false);
-    console.log(imageId);
+    console.log(img);
   };
   const handleOpen = () => {
     setOpen(true);
   };
-
-  const checkURL = (url) => {
-    url.map((image) => {
-      return image.match(/\.(jpeg|jpg|png|gif)$/) != null ? true : false;
-    });
+  const removeA = (arr) => {
+    var what,
+      a = arguments,
+      L = a.length,
+      ax;
+    while (L > 1 && arr.length) {
+      what = a[--L];
+      while ((ax = arr.indexOf(what)) !== -1) {
+        arr.splice(ax, 1);
+      }
+    }
+    return arr;
   };
 
   return (
@@ -105,7 +110,8 @@ export default function FormInsights(props) {
               ""
             )}
             {images.map((image) => {
-              <img src={image} height="150" width="150" />;
+              console.log(image),
+                (<img src={image} height="150" width="150" />);
             })}
             <Button
               type="submit"

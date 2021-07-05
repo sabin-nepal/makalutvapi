@@ -11,12 +11,11 @@ const{
 
 const{
 	upload,
-	uploads,
 	
 }	= require('../controllers/upload.js');
 
-router.route('/').get(getAll);
-router.route('/:id').get(getMediaById);
+router.route('/').get(protect,getAll);
+router.route('/:id').get(protect,getMediaById);
 router.route('/:id').delete(protect,deletes);
 
 //upload
