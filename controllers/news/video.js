@@ -1,5 +1,6 @@
 const { Video,Category } = require('../../models/news/Video');
 const Media = require('../../models/Media')
+const { getPagination } = require('../../helpers/pagination');
 
 exports.create = async (req,res) => {
 
@@ -56,8 +57,11 @@ exports.getAll = async(req,res)=>{
 }
 
 exports.getVideos = async(req,res)=>{
-
+	const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
 	const video = await Video.findAll({
+		limit,
+		offset,
 	  include:[
 	  		{
 	  		 model: Media,

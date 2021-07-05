@@ -54,7 +54,7 @@ export default function News() {
   const [message, setMessage] = useState(null);
   const token = localStorage.getItem("token");
   function handleClick() {
-    history.push("/admin/add-news");
+    history.push("/admin/form/news");
   }
   const editData = async (value) => {
     history.push({

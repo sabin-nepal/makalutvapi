@@ -1,6 +1,12 @@
 const Media = require('../models/Media');
+const { getPagination } = require('../helpers/pagination');
 exports.getAll = async(req,res) => {
-	const media = await Media.findAll();
+	const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+	const media = await Media.findAll({
+		limit,
+		offset
+	});
 	res.status(200).json(media);
 }
 

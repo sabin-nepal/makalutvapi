@@ -1,7 +1,8 @@
 const { News,Category } = require('../../models/news/News');
 const Media = require('../../models/Media')
 const PollResult = require('../../models/news/PollResult')
-const { getThumbnail } = require('../media')
+//const { getThumbnail } = require('../media')
+const { getPagination } = require('../../helpers/pagination');
 const { sendNotification } = require('../../helpers/notification.js')
 const { Op } = require("sequelize");
 
@@ -77,7 +78,11 @@ exports.getAll = async(req,res) => {
 }
 
 exports.getNews = async(req,res) => {
-	const news = await News.findAll({
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+	const news = await News.findAndCountAll({
+		limit,
+		offset,
 	  include: [
 	    	{
 	    	 model: Category,

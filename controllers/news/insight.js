@@ -1,5 +1,6 @@
 const { Insight,Category } = require('../../models/news/Insight');
 const Media = require('../../models/Media')
+const { getPagination } = require('../../helpers/pagination');
 
 exports.create = async (req,res) => {
 
@@ -50,8 +51,11 @@ exports.getAll = async(req,res) => {
 }
 
 exports.getInsights = async(req,res) => {
-
+	const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
 	const insight = await Insight.findAll({
+		limit,
+		offset,
 	  include:[
 	  	{
 	  	 model: Media,

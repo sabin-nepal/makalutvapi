@@ -1,6 +1,7 @@
 const Adv = require('../models/Adv');
-const Category = require('../models/Category')
+//const Category = require('../models/Category')
 const Media = require('../models/Media')
+const { getPagination } = require('../helpers/pagination');
 exports.create = async (req,res) => {
 
 	const { title,url,media,startDate,endDate,status,type='banner'} = req.body
@@ -63,7 +64,11 @@ exports.getAll = async(req,res) => {
 }
 
 exports.getAdvs = async(req,res) => {
+	const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
 	const adv = await Adv.findAll({
+		limit,
+		offset,
 	  include: [
 	    	{
 	    	 model: Media,

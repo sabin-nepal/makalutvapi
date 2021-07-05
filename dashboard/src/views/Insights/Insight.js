@@ -75,7 +75,6 @@ export default function Insight() {
   const editData = async (value) => {
     history.push({
       pathname: "/admin/form/insight",
-      query: "query=edit",
       state: value,
     });
   };
@@ -118,7 +117,7 @@ export default function Insight() {
           <Button
             fullWidth
             color="primary"
-            onClick={() => handleClick("/admin/add-insight")}
+            onClick={() => handleClick("/admin/form/insight")}
           >
             Add Insight
           </Button>
