@@ -96,7 +96,7 @@ export default function Adv() {
     };
     const response = await axios(config);
     let data;
-    response.data.map((adv, key) => {
+    response.data.rows.map((adv, key) => {
       var index = key + 1;
       data = [
         "" + index,

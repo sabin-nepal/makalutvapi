@@ -87,7 +87,7 @@ export default function Insight() {
   const getAllInsights = async () => {
     const response = await axios.get("/insight");
     let data;
-    response.data.map((insight, key) => {
+    response.data.rows.map((insight, key) => {
       var index = key + 1;
       data = [
         "" + index,

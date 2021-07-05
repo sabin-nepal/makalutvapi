@@ -95,7 +95,7 @@ export default function Videos() {
     };
     const response = await axios(config);
     let data;
-    response.data.map((getNews, key) => {
+    response.data.rows.map((getNews, key) => {
       var index = key + 1;
       data = [
         "" + index,
