@@ -70,7 +70,8 @@ export default function MediaLibrary(props) {
   const [files, setFiles] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [mediaList, setMediaList] = useState([]);
-  const [mediaId, setMediaId] = useState(0);
+  const [selectedMediaUrl, setSelectedMediaUrl] = useState([]);
+  const [selectedMediaId, setSelectedMediaId] = useState([]);
   const mediaStyles = {
     width: "20%",
     height: "200px",
@@ -138,14 +139,27 @@ export default function MediaLibrary(props) {
     }
   };
   const handleClick = (event, key) => {
-    //event.stopPropagation();
     event.preventDefault();
-    //event.nativeEvent.stopImmediatePropagation();
-    setMediaId(key);
-    setOpen(false);
-    // eslint-disable-next-line react/prop-types
-    props.sendDataToParent(event.target.dataset.id, event.target.href, open);
-    //sendDataToParent(event.target.mediaId);
+    if (props.isMultiple) {
+      let _selectedMediaUrl = [...selectedMediaUrl];
+      let _selectedMediaId = [...selectedMediaId];
+      if (
+        _selectedMediaUrl.length > 0 &&
+        _selectedMediaUrl.includes(event.target.href)
+      ) {
+        _selectedMediaUrl.splice(key, 1);
+        _selectedMediaId.splice(key, 1);
+      } else {
+        _selectedMediaUrl.push(event.target.href);
+        _selectedMediaId.push(event.target.dataset.id);
+      }
+      setSelectedMediaUrl(_selectedMediaUrl);
+      setSelectedMediaId(_selectedMediaId);
+    } else {
+      setSelectedMediaUrl([event.target.href]);
+      setSelectedMediaId([event.target.dataset.id]);
+    }
+    //props.sendDataToParent(event.target.dataset.id, event.target.href, open);
   };
 
   useEffect(() => {
@@ -196,15 +210,57 @@ export default function MediaLibrary(props) {
                   {media.type === "thumbnail" ? (
                     <img
                       src={media.path}
-                      style={key === mediaId ? selectedStyle : imgStyles}
+                      style={
+                        selectedMediaUrl.includes(media.path)
+                          ? selectedStyle
+                          : imgStyles
+                      }
                     />
                   ) : (
-                    <video style={imgStyles}>
+                    <video
+                      style={
+                        selectedMediaUrl.includes(media.path)
+                          ? selectedStyle
+                          : imgStyles
+                      }
+                    >
                       <source src={media.path} type="video/mp4"></source>
                     </video>
                   )}
                 </a>
               ))}
+            </div>
+            <div
+              style={{
+                textAlign: "right",
+                position: "absolute",
+                width: "100%",
+                bottom: 0,
+                left: 0,
+                padding: "20px",
+                boxSizing: "border-box",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  props.isMultiple
+                    ? props.sendDataToParent(
+                        selectedMediaId,
+                        selectedMediaUrl,
+                        open
+                      )
+                    : props.sendDataToParent(
+                        selectedMediaId[0],
+                        selectedMediaUrl[0],
+                        open
+                      );
+                }}
+                disabled={selectedMediaId.length < 1 ? true : false}
+              >
+                Select
+              </Button>
             </div>
           </TabPanel>
           <TabPanel value={value} index={1}>
@@ -243,4 +299,6 @@ export default function MediaLibrary(props) {
 
 MediaLibrary.propTypes = {
   open: PropTypes.any.isRequired,
+  isMultiple: PropTypes.bool,
+  sendDataToParent: PropTypes.func,
 };
