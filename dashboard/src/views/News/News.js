@@ -94,8 +94,9 @@ export default function News() {
       },
     };
     const response = await axios(config);
+    console.log(response);
     let data;
-    response.data.map((getNews, key) => {
+    response.data.rows.map((getNews, key) => {
       var index = key + 1;
       data = [
         "" + index,

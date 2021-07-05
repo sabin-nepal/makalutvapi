@@ -3,7 +3,7 @@ const { getPagination } = require('../helpers/pagination');
 exports.getAll = async(req,res) => {
 	const { page, size } = req.query;
   const { limit, offset } = getPagination(page, size);
-	const media = await Media.findAll({
+	const media = await Media.findAndCountAll({
 		limit,
 		offset
 	});

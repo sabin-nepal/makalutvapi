@@ -53,7 +53,7 @@ exports.getAll = async(req,res) => {
 exports.getInsights = async(req,res) => {
 	const { page, size } = req.query;
   const { limit, offset } = getPagination(page, size);
-	const insight = await Insight.findAll({
+	const insight = await Insight.findAndCountAll({
 		limit,
 		offset,
 	  include:[

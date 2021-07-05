@@ -65,7 +65,9 @@ export default function FormInsights(props) {
       console.log(error);
     }
   };
-  const sendDataToParent = (id, img, modalStatus) => {
+  const sendDataToParent = (id, img) => {
+    console.log(id);
+    console.log(img);
     if (!checkURL(img)) {
       setError("Only Support images");
     } else {
@@ -73,14 +75,17 @@ export default function FormInsights(props) {
       setImages(img);
       setError(null);
     }
-    setOpen(modalStatus);
+    setOpen(false);
+    console.log(imageId);
   };
   const handleOpen = () => {
     setOpen(true);
   };
 
   const checkURL = (url) => {
-    return url.match(/\.(jpeg|jpg|png|gif)$/) != null;
+    url.map((image) => {
+      return image.match(/\.(jpeg|jpg|png|gif)$/) != null ? true : false;
+    });
   };
 
   return (
@@ -112,7 +117,11 @@ export default function FormInsights(props) {
             >
               Add Images
             </Button>
-            <MediaLibrary open={open} sendDataToParent={sendDataToParent} />
+            <MediaLibrary
+              isMultiple={true}
+              open={open}
+              sendDataToParent={sendDataToParent}
+            />
             <Button
               type="submit"
               fullWidth

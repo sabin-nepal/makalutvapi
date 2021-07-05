@@ -66,7 +66,7 @@ exports.getAll = async(req,res) => {
 exports.getAdvs = async(req,res) => {
 	const { page, size } = req.query;
   const { limit, offset } = getPagination(page, size);
-	const adv = await Adv.findAll({
+	const adv = await Adv.findAndCountAll({
 		limit,
 		offset,
 	  include: [
