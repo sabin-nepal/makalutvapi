@@ -38,11 +38,47 @@ import CardBody from "components/Card/CardBody.js";
 // } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import axios from "axios";
 
 const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
+  const token = localStorage.getItem("token");
+  // const [news, setNews] = useState([]);
+  // const [pollCount, setPollCount] = useState([]);
+  // const [insightCount, setInsightCount] = useState([]);
+  const [advCount, setAdvCount] = React.useState([]);
+  React.useEffect(() => {
+    getNews();
+    countPoll();
+    countAdv();
+    countInsight();
+    countVideo();
+  }, []);
+
+  const configUrl = (url) => {
+    const config = {
+      method: "get",
+      url: url,
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    return config;
+  };
+
+  const getNews = async () => {
+    //const response = await axios(configUrl("/news/all?type=news"));
+  };
+  const countPoll = async () => {};
+  const countAdv = async () => {
+    const response = await axios(configUrl("/adv/all?size=0"));
+    setAdvCount(response.data.count);
+  };
+  const countInsight = async () => {};
+  const countVideo = async () => {};
+
   return (
     <div>
       <GridContainer>
@@ -76,7 +112,7 @@ export default function Dashboard() {
                 <Store />
               </CardIcon>
               <p className={classes.cardCategory}>Published Ads</p>
-              <h3 className={classes.cardTitle}>10</h3>
+              <h3 className={classes.cardTitle}>{advCount}</h3>
             </CardHeader>
             {/* <CardFooter stats>
               <div className={classes.stats}>
