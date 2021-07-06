@@ -45,15 +45,18 @@ const useStyles = makeStyles(styles);
 export default function Dashboard() {
   const classes = useStyles();
   const token = localStorage.getItem("token");
-  // const [news, setNews] = useState([]);
-  // const [pollCount, setPollCount] = useState([]);
-  // const [insightCount, setInsightCount] = useState([]);
-  const [advCount, setAdvCount] = React.useState([]);
+  let _tableData = [];
+  const [newsCount, setNewsCount] = React.useState("");
+  const [news, setNews] = React.useState([]);
+  const [pollCount, setPollCount] = React.useState("");
+  //const [insightCount, setInsightCount] = React.useState("");
+  const [videoCount, setVideoCount] = React.useState("");
+  const [advCount, setAdvCount] = React.useState("");
   React.useEffect(() => {
     getNews();
     countPoll();
     countAdv();
-    countInsight();
+    //countInsight();
     countVideo();
   }, []);
 
@@ -69,15 +72,36 @@ export default function Dashboard() {
   };
 
   const getNews = async () => {
-    //const response = await axios(configUrl("/news/all?type=news"));
+    const response = await axios(configUrl("/news/all?type=news"));
+    setNewsCount(response.data.count);
+    let data;
+    response.data.rows.map((getNews, key) => {
+      var index = key + 1;
+      data = ["" + index, getNews.title, getNews.categories[0].title];
+      _tableData.push(data);
+    });
+    setNews(_tableData);
   };
-  const countPoll = async () => {};
+  const countPoll = async () => {
+    const response = await axios(
+      configUrl("/news/all?type=poll&size=0&status=active")
+    );
+    setPollCount(response.data.count);
+  };
   const countAdv = async () => {
-    const response = await axios(configUrl("/adv/all?size=0"));
+    const response = await axios(configUrl("/adv/all?size=0&status=active"));
     setAdvCount(response.data.count);
   };
-  const countInsight = async () => {};
-  const countVideo = async () => {};
+  // const countInsight = async () => {
+  //   const response = await axios(
+  //     configUrl("/insight/all?size=0&status=active")
+  //   );
+  //   setInsightCount(response.data.count);
+  // };
+  const countVideo = async () => {
+    const response = await axios(configUrl("/video/all?size=0&status=active"));
+    setVideoCount(response.data.count);
+  };
 
   return (
     <div>
@@ -90,7 +114,7 @@ export default function Dashboard() {
               </CardIcon>
               <p className={classes.cardCategory}>Published Posts</p>
               <h3 className={classes.cardTitle}>
-                <span>200</span>
+                <span>{newsCount}</span>
               </h3>
             </CardHeader>
             {/* <CardFooter stats>
@@ -129,7 +153,7 @@ export default function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>published Videos</p>
-              <h3 className={classes.cardTitle}>75</h3>
+              <h3 className={classes.cardTitle}>{videoCount}</h3>
             </CardHeader>
             {/* <CardFooter stats>
               <div className={classes.stats}>
@@ -146,7 +170,7 @@ export default function Dashboard() {
                 <Accessibility />
               </CardIcon>
               <p className={classes.cardCategory}>Polls</p>
-              <h3 className={classes.cardTitle}>5</h3>
+              <h3 className={classes.cardTitle}>{pollCount}</h3>
             </CardHeader>
             {/* <CardFooter stats>
               <div className={classes.stats}>
@@ -166,13 +190,8 @@ export default function Dashboard() {
             <CardBody>
               <Table
                 tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Salary", "Country"]}
-                tableData={[
-                  ["1", "Dakota Rice", "$36,738", "Niger"],
-                  ["2", "Minerva Hooper", "$23,789", "Curaçao"],
-                  ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
-                  ["4", "Philip Chaney", "$38,735", "Korea, South"],
-                ]}
+                tableHead={["ID", "Title", "Category"]}
+                tableData={news}
               />
             </CardBody>
           </Card>
