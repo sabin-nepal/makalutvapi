@@ -31,6 +31,7 @@ import CardBody from "components/Card/CardBody.js";
 import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import EditIcon from "@material-ui/icons/EditOutlined";
 import Alert from "@material-ui/lab/Alert";
+import Pagination from "@material-ui/lab/Pagination";
 // import CardFooter from "components/Card/CardFooter.js";
 
 // import { bugs, website, server } from "variables/general.js";
@@ -50,7 +51,10 @@ export default function News() {
   const classes = useStyles();
   const history = useHistory();
   let _tableData = [];
+  var limit = 10;
   const [news, setNews] = useState([]);
+  const [newsCount, setNewsCount] = useState("");
+  const [page, setPage] = useState(1);
   const [message, setMessage] = useState(null);
   const token = localStorage.getItem("token");
   function handleClick() {
@@ -87,14 +91,14 @@ export default function News() {
   const getAllNews = async () => {
     const config = {
       method: "get",
-      url: "/news/all",
+      url: `/news/all?size=${limit}&page=${page - 1}`,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: "Bearer " + token,
       },
     };
     const response = await axios(config);
-    console.log(response);
+    setNewsCount(response.data.count);
     let data;
     response.data.rows.map((getNews, key) => {
       var index = key + 1;
@@ -112,6 +116,11 @@ export default function News() {
       _tableData.push(data);
     });
     setNews(_tableData);
+  };
+  const handlePaginationChange = (event, value) => {
+    console.log(value);
+    setPage(value);
+    getAllNews();
   };
   return (
     <div>
@@ -136,6 +145,12 @@ export default function News() {
                 tableData={news}
               />
             </CardBody>
+            <Pagination
+              count={newsCount}
+              page={page}
+              onChange={handlePaginationChange}
+              variant="outlined"
+            />
           </Card>
         </GridItem>
       </GridContainer>
