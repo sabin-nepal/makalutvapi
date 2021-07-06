@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     position: "absolute",
+    paddingTop: "30px",
     width: "85%",
     height: "80vh",
     overflow: "auto",
@@ -72,6 +74,9 @@ export default function MediaLibrary(props) {
   const [mediaList, setMediaList] = useState([]);
   const [selectedMediaUrl, setSelectedMediaUrl] = useState([]);
   const [selectedMediaId, setSelectedMediaId] = useState([]);
+  const [pageNo, setPageNo] = useState(0);
+  const pageSize = 15;
+  const [loadMore, setLoadMore] = useState(false);
   const mediaStyles = {
     width: "20%",
     height: "200px",
@@ -156,8 +161,16 @@ export default function MediaLibrary(props) {
       setSelectedMediaUrl(_selectedMediaUrl);
       setSelectedMediaId(_selectedMediaId);
     } else {
-      setSelectedMediaUrl([event.target.href]);
-      setSelectedMediaId([event.target.dataset.id]);
+      if (
+        selectedMediaUrl.length > 0 &&
+        selectedMediaUrl.includes(event.target.href)
+      ) {
+        setSelectedMediaUrl([]);
+        setSelectedMediaId([]);
+      } else {
+        setSelectedMediaUrl([event.target.href]);
+        setSelectedMediaId([event.target.dataset.id]);
+      }
     }
     //props.sendDataToParent(event.target.dataset.id, event.target.href, open);
   };
@@ -167,8 +180,33 @@ export default function MediaLibrary(props) {
     //console.log(mediaList);
   }, []);
   const getAllMedia = async () => {
-    const response = await axios.get("/media");
-    setMediaList(response.data);
+    setLoadMore(true);
+    const config = {
+      method: "get",
+      url: "/media",
+      params: {
+        page: pageNo,
+        size: pageSize,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    };
+    const response = await axios(config);
+    if (pageNo == 0) {
+      setMediaList(response.data.rows);
+    } else {
+      setMediaList([...mediaList, ...response.data.rows]);
+    }
+    console.log(response.data.rows.length);
+    if (response.data.rows.length >= pageSize) {
+      setPageNo(pageNo + 1);
+      setLoadMore(false);
+    } else {
+      setPageNo(-1);
+    }
+    console.log(pageNo);
   };
   return (
     <Modal
@@ -180,16 +218,18 @@ export default function MediaLibrary(props) {
       <div className={classes.paper}>
         <div className={classes.root}>
           <Paper>
-            <Tabs
-              value={value}
-              indicatorColor="primary"
-              textColor="primary"
-              onChange={handleChange}
-              aria-label="simple tabs example"
-            >
-              <Tab label="Media Library" {...a11yProps(0)} />
-              <Tab label="Upload New" {...a11yProps(1)} />
-            </Tabs>
+            <AppBar color="white" position="fixed">
+              <Tabs
+                value={value}
+                indicatorColor="primary"
+                textColor="primary"
+                onChange={handleChange}
+                aria-label="simple tabs example"
+              >
+                <Tab label="Media Library" {...a11yProps(0)} />
+                <Tab label="Upload New" {...a11yProps(1)} />
+              </Tabs>
+            </AppBar>
           </Paper>
           <TabPanel value={value} index={0}>
             <div
@@ -230,38 +270,46 @@ export default function MediaLibrary(props) {
                 </a>
               ))}
             </div>
-            <div
-              style={{
-                textAlign: "right",
-                position: "absolute",
-                width: "100%",
-                bottom: 0,
-                left: 0,
-                padding: "20px",
-                boxSizing: "border-box",
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  props.isMultiple
-                    ? props.sendDataToParent(
-                        selectedMediaId,
-                        selectedMediaUrl,
-                        open
-                      )
-                    : props.sendDataToParent(
-                        selectedMediaId[0],
-                        selectedMediaUrl[0],
-                        open
-                      );
-                }}
-                disabled={selectedMediaId.length < 1 ? true : false}
-              >
-                Select
-              </Button>
+            <div style={{ textAlign: "center" }}>
+              {pageNo > 0 && (
+                <Button
+                  variant="contained"
+                  style={{ marginTop: "15px" }}
+                  disabled={loadMore}
+                  onClick={getAllMedia}
+                >
+                  Load More
+                </Button>
+              )}
             </div>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{
+                position: "sticky",
+                bottom: "15px",
+                right: "15px",
+                boxSizing: "border-box",
+                zIndex: 2,
+                float: "right",
+              }}
+              onClick={() => {
+                props.isMultiple
+                  ? props.sendDataToParent(
+                      selectedMediaId,
+                      selectedMediaUrl,
+                      open
+                    )
+                  : props.sendDataToParent(
+                      selectedMediaId[0],
+                      selectedMediaUrl[0],
+                      open
+                    );
+              }}
+              disabled={selectedMediaId.length < 1 ? true : false}
+            >
+              Select
+            </Button>
           </TabPanel>
           <TabPanel value={value} index={1}>
             <DropzoneArea
