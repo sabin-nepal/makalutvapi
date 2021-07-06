@@ -1,6 +1,7 @@
 const { Video,Category } = require('../../models/news/Video');
 const Media = require('../../models/Media')
 const { getPagination } = require('../../helpers/pagination');
+const { Op } = require("sequelize");
 
 exports.create = async (req,res) => {
 
@@ -57,9 +58,15 @@ exports.getAll = async(req,res)=>{
 }
 
 exports.getVideos = async(req,res)=>{
-	const { page, size } = req.query;
+	const { page, size,status } = req.query;
+	const statusType = status ? status : ["active","inactive"];
   const { limit, offset } = getPagination(page, size);
 	const video = await Video.findAndCountAll({
+		where:{
+			status:{
+				[Op.or]: [statusType]
+			  },
+		},
 		limit,
 		offset,
 	  include:[

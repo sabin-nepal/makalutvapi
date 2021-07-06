@@ -5,7 +5,10 @@ exports.getAll = async(req,res) => {
   const { limit, offset } = getPagination(page, size);
 	const media = await Media.findAndCountAll({
 		limit,
-		offset
+		offset,
+		order: [
+			['createdAt', 'DESC'],
+		   ] 
 	});
 	res.status(200).json(media);
 }

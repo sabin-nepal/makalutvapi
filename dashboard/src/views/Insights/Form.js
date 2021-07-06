@@ -66,11 +66,12 @@ export default function FormInsights(props) {
     }
   };
   const sendDataToParent = (id, img) => {
-    img.map((image) => {
-      if (image.match(/\.(jpeg|jpg|png|gif)$/) == null) {
-        removeA(img, image);
-      }
-    });
+    if (img != "")
+      img.map((image) => {
+        if (image.match(/\.(jpeg|jpg|png|gif)$/) == null) {
+          removeA(img, image);
+        }
+      });
     setImageId(id);
     setImages(img);
     setOpen(false);
@@ -109,10 +110,12 @@ export default function FormInsights(props) {
             ) : (
               ""
             )}
-            {images.map((image) => {
-              console.log(image),
-                (<img src={image} height="150" width="150" />);
-            })}
+            {images !== ""
+              ? images.map((image) => {
+                  console.log(image),
+                    (<img src={image} height="150" width="150" />);
+                })
+              : ""}
             <Button
               type="submit"
               fullWidth

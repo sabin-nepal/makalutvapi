@@ -78,9 +78,19 @@ exports.getAll = async(req,res) => {
 }
 
 exports.getNews = async(req,res) => {
-  const { page, size } = req.query;
+  const { page, size,type,status } = req.query;
+  const postType = type ? type : ["news","poll"];
+  const statusType = status ? status : ["active","inactive"];
   const { limit, offset } = getPagination(page, size);
 	const news = await News.findAndCountAll({
+		where:{
+			status:{
+				[Op.or]: [statusType]
+			  },
+			type:{
+				[Op.or]: [postType]
+			  }	
+		},
 		limit,
 		offset,
 	  include: [
