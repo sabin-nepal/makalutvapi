@@ -115,11 +115,14 @@ exports.getNews = async(req,res) => {
 }
 
 const getAllNewsByType = exports.getType = async(req,res) => {
-	const {type} = req.params;
+	const {type} = req.query;
+	const postType = type ? type : ["news","poll"];
 	const news = await News.findAll({
 	  where: {
 	    status: 'active',
-	    type: type,
+	    type:{
+				[Op.or]: [postType]
+			  }
 	  },
 	  include: [
 	    	{
@@ -142,19 +145,58 @@ const getAllNewsByType = exports.getType = async(req,res) => {
 	res.status(200).json(news);
 }
 
+exports.getdailyNews = async(req,res) => {
+	const {type} = req.query;
+	const postType = type ? type : ["news","poll"];
+	const TODAY_START = new Date().setHours(0, 0, 0, 0);
+	const NOW = new Date();
+	const news = await News.findAll({
+	  where: {
+	    status: 'active',
+	    type:{
+				[Op.or]: [postType]
+			  },
+		createdAt: { 
+		          [Op.gt]: TODAY_START,
+		          [Op.lt]: NOW
+		        },
+	  },
+	  include: [
+	    	{
+	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
+	    ],
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	res.status(200).json(news);
+}
 
 exports.getTypeLimit = async(req,res) => {
-	const {type,limit} = req.params;
-	if(Number(limit)===-1){
+	const {type,limit} = req.query;
+	const postType = type ? type : ["news","poll"];
+	if(limit===-1){
 		await getAllNewsByType(req,res);
 	}
 	else{
 		const news = await News.findAll({
 		  where: {
 		    status: 'active',
-		    type: type,
+		    type:{
+    				[Op.or]: [postType]
+    			  }	
 		  },
-		  limit: Number(limit),
+		  limit,
 		  include: [
 		    	{
 		    	 model: Category,

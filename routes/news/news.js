@@ -7,7 +7,7 @@ const{
 	create,
 	getAll,
 	getTypeLimit,
-	getType,
+	getdailyNews,
 	getSingle,
 	edit,
 	deletes,
@@ -21,8 +21,8 @@ const{
 
 router.route('/').get(getAll);
 router.route('/all').get(protect,getNews);
-router.route('/type/:type').get(getType);
-router.route('/type/:type/:limit').get(getTypeLimit);
+router.route('/daily').get(getdailyNews);
+router.route('/type').get(getTypeLimit);
 router.route('/:id').get(getSingle);
 router.route('/edit/:id').post(protect,edit);
 router.route('/create').post(protect,create);

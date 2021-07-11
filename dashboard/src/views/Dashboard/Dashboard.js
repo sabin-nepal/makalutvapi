@@ -72,7 +72,9 @@ export default function Dashboard() {
   };
 
   const getNews = async () => {
-    const response = await axios(configUrl("/news/all?type=news"));
+    const response = await axios(
+      configUrl("/news/all?type=news&status=active")
+    );
     setNewsCount(response.data.count);
     let data;
     response.data.rows.map((getNews, key) => {

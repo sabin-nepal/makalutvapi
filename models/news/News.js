@@ -19,6 +19,7 @@ const News = db.define("news", {
   excerpt: Sequelize.TEXT,
   pollTitle: Sequelize.STRING,
   endDate: Sequelize.DATE,
+  view: Sequelize.STRING,
   type: {
     type: Sequelize.STRING,
     defaultValue: 'news',
