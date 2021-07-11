@@ -5,6 +5,7 @@ const PollResult = require('../../models/news/PollResult')
 const { getPagination } = require('../../helpers/pagination');
 const { sendNotification } = require('../../helpers/notification.js')
 const { Op } = require("sequelize");
+const db = require("../../config/db");
 
 exports.create = async (req,res) => {
 	var notifyImage;
@@ -114,36 +115,37 @@ exports.getNews = async(req,res) => {
 	res.status(200).json(news);
 }
 
-const getAllNewsByType = exports.getType = async(req,res) => {
-	const {type} = req.query;
-	const postType = type ? type : ["news","poll"];
-	const news = await News.findAll({
-	  where: {
-	    status: 'active',
-	    type:{
-				[Op.or]: [postType]
-			  }
-	  },
-	  include: [
-	    	{
-	    	 model: Category,
-	    	 through: {attributes: []}
-	    	},
-	    	{
-	    	 model: Media,
-	    	 attributes: ['id','path','type'],
-	    	 through: {attributes: []}
-	    	},
-	    	{
-	    	 model: PollResult,
-	    	} 
-	    ],
-	  order: [
-	      ['createdAt', 'DESC'],
-	     ] 
-	});
-	res.status(200).json(news);
-}
+// const getAllNewsByType = exports.getType = async(req,res) => {
+// 	const {type,order} = req.query;
+// 	const postType = type ? type : ["news","poll"];
+// 	const getOrder = order ? ['createdAt', 'DESC'] : [];
+// 	const news = await News.findAll({
+// 	  where: {
+// 	    status: 'active',
+// 	    type:{
+// 				[Op.or]: [postType]
+// 			  }
+// 	  },
+// 	  include: [
+// 	    	{
+// 	    	 model: Category,
+// 	    	 through: {attributes: []}
+// 	    	},
+// 	    	{
+// 	    	 model: Media,
+// 	    	 attributes: ['id','path','type'],
+// 	    	 through: {attributes: []}
+// 	    	},
+// 	    	{
+// 	    	 model: PollResult,
+// 	    	} 
+// 	    ],
+// 	  order: [
+// 	      ['createdAt', 'DESC'],
+// 	     ] 
+// 	});
+// 	res.status(200).json(news);
+// }
 
 exports.getdailyNews = async(req,res) => {
 	const {type} = req.query;
@@ -182,41 +184,37 @@ exports.getdailyNews = async(req,res) => {
 	res.status(200).json(news);
 }
 
-exports.getTypeLimit = async(req,res) => {
-	const {type,limit} = req.query;
+exports.getType = async(req,res) => {
+	const {type,limit,order} = req.query;
 	const postType = type ? type : ["news","poll"];
-	if(limit===-1){
-		await getAllNewsByType(req,res);
-	}
-	else{
-		const news = await News.findAll({
-		  where: {
-		    status: 'active',
-		    type:{
-    				[Op.or]: [postType]
-    			  }	
-		  },
-		  limit,
-		  include: [
-		    	{
-		    	 model: Category,
-		    	 through: {attributes: []}
-		    	},
-		    	{
-		    	 model: Media,
-		    	 attributes: ['id','path','type'],
-		    	 through: {attributes: []}
-		    	},
-		    	{
-		    	 model: PollResult,
-		    	} 
-		    ],
-		  order: [
-		      ['createdAt', 'DESC'],
-		     ] 
-		});
-		res.status(200).json(news);	
-	}	
+	const getOrder = order ? ['createdAt', 'DESC'] : db.random();
+	const news = await News.findAll({
+	  where: {
+	    status: 'active',
+	    type:{
+				[Op.or]: [postType]
+			  }	
+	  },
+	  limit,
+	  include: [
+	    	{
+	    	 model: Category,
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	 through: {attributes: []}
+	    	},
+	    	{
+	    	 model: PollResult,
+	    	} 
+	    ],
+	  order: [
+	      getOrder,
+	     ] 
+	});
+	res.status(200).json(news);	
 }
 
 exports.getSingle = async(req,res) => {
