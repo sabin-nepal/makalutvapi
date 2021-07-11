@@ -19,8 +19,8 @@ const{
 }	= require('../../controllers/news/news.js');
 
 
-router.route('/').get(getAll);
-router.route('/all').get(protect,getNews);
+router.route('/').get(getNews);
+router.route('/all').get(protect,getAll);
 router.route('/daily').get(getdailyNews);
 router.route('/type').get(getType);
 router.route('/:id').get(getSingle);

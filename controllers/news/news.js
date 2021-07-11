@@ -53,7 +53,7 @@ exports.create = async (req,res) => {
 	});
 }
 
-exports.getAll = async(req,res) => {
+exports.getNews = async(req,res) => {
 	const news = await News.findAll({
 	  where: {
 	    status: 'active',
@@ -79,7 +79,7 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(news);
 }
 
-exports.getNews = async(req,res) => {
+exports.getAll = async(req,res) => {
   const { page, size,type,status } = req.query;
   const postType = type ? type : ["news","poll"];
   const statusType = status ? status : ["active","inactive"];

@@ -30,6 +30,9 @@ exports.getNews = async (req,res) => {
 	var news;
 	let categoriesNews = [];
 	const categories = await Category.findAll({
+		where: {
+			type: 'news',
+		  },
 		include:[
 	  	{
 	  	 model: Media,
