@@ -9,8 +9,8 @@ const db = require("../../config/db");
 
 exports.create = async (req,res) => {
 	var notifyImage;
-	const { title, content, type='news', excerpt,thumbnail,media,category,status,pollTitle} = req.body
-	if(!title || !content || !media)
+	const { title, content, type='news', excerpt,thumbnail,url,media,category,status,pollTitle} = req.body
+	if(!title || !excerpt || !media)
 		return res.status(406).json({
 		  success: false,
 		  msg: "Title , content or media cannot be empty.",
@@ -32,6 +32,7 @@ exports.create = async (req,res) => {
 		excerpt:excerpt,
 		status:status,
 		type:type,
+		url:url,
 		pollTitle: pollTitle,
 		userId:req.user.id,
 	});
@@ -227,7 +228,7 @@ exports.getSingle = async(req,res) => {
 }
 
 exports.edit = async (req,res) => {
-	const { title, content, excerpt,media,category,status,type='news',pollTitle} = req.body
+	const { title, content, excerpt,media,url,category,status,type='news',pollTitle} = req.body
 	const news = await News.findByPk(req.params.id,{
 			include: [
 		    	{
@@ -243,7 +244,7 @@ exports.edit = async (req,res) => {
 		  success: false,
 		  msg: "Unauthorized.",
 		});
-	if(!title || !content || !media)
+	if(!title || !excerpt || !media)
 		return res.status(406).json({
 		  success: false,
 		  msg: "Title , content or media cannot be empty.",
@@ -259,6 +260,7 @@ exports.edit = async (req,res) => {
 	await news.removeMedia(news.media)
 	news.title = title
 	news.content = content
+	news.url = url
 	news.excerpt = excerpt
 	news.status = status
 	news.pollTitle = pollTitle
