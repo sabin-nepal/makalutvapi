@@ -178,16 +178,14 @@ exports.getdailyNews = async(req,res) => {
 	    	 model: PollResult,
 	    	} 
 	    ],
-	  order: [
-	      ['createdAt', 'DESC'],
-	     ] 
 	});
 	res.status(200).json(news);
 }
 
 exports.getType = async(req,res) => {
-	const {type,limit,order} = req.query;
+	const {type,size,order} = req.query;
 	const postType = type ? type : ["news","poll"];
+	const limit = size ? Number(size) : null;
 	const getOrder = order ? ['createdAt', 'DESC'] : db.random();
 	const news = await News.findAll({
 	  where: {
@@ -196,7 +194,7 @@ exports.getType = async(req,res) => {
 				[Op.or]: [postType]
 			  }	
 	  },
-	  limit,
+	  limit: limit,
 	  include: [
 	    	{
 	    	 model: Category,
