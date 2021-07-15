@@ -54,6 +54,7 @@ exports.create = async (req,res) => {
 }
 
 exports.getNews = async(req,res) => {
+	const { page, size} = req.query;
 	const news = await News.findAll({
 	  where: {
 	    status: 'active',
@@ -183,9 +184,10 @@ exports.getdailyNews = async(req,res) => {
 }
 
 exports.getType = async(req,res) => {
-	const {type,size,order} = req.query;
+	const {type,size,page,order} = req.query;
 	const postType = type ? type : ["news","poll"];
 	const limit = size ? Number(size) : null;
+	const offset = page ? page * limit : 0; 
 	const getOrder = order ? ['createdAt', 'DESC'] : db.random();
 	const news = await News.findAll({
 	  where: {
@@ -195,6 +197,7 @@ exports.getType = async(req,res) => {
 			  }	
 	  },
 	  limit: limit,
+	  offset: offset,
 	  include: [
 	    	{
 	    	 model: Category,
@@ -213,7 +216,7 @@ exports.getType = async(req,res) => {
 	      getOrder,
 	     ] 
 	});
-	res.status(200).json(news);	
+	res.status(200).json(news);		
 }
 
 exports.getSingle = async(req,res) => {
@@ -291,19 +294,16 @@ exports.deletes = async (req,res) => {
 
 exports.getCategoryNews = async (req,res) => {
 
-	const {id,limit} = req.params;
-	var setLimit; 
-	if(Number(limit)===-1){
-		setLimit = null;
-	}
-	else{
-		setLimit = Number(limit); 
-	}
+	const {id} = req.params;
+	const {size,page} = req.query;
+	const limit = size ? size : 4;
+	const offset = page ? page * limit : 0; 
 	const news = await News.findAll({
 		where: {
     	   status: 'active'
     	 },
-    	 limit: setLimit,
+    	 limit: limit,
+    	 offset: offset,
     	 order: [
     	     ['createdAt', 'DESC'],
     	    ],
