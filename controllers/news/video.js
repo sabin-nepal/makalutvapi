@@ -27,7 +27,7 @@ exports.create = async (req,res) => {
 	});
 }
 
-exports.getAll = async(req,res)=>{
+exports.getVideos = async(req,res)=>{
 
 	const video = await Video.findAll({
 	  where: {
@@ -57,7 +57,7 @@ exports.getAll = async(req,res)=>{
 
 }
 
-exports.getVideos = async(req,res)=>{
+exports.getAll = async(req,res)=>{
 	const { page, size,status } = req.query;
 	const statusType = status ? status : ["active","inactive"];
   const { limit, offset } = getPagination(page, size);

@@ -12,8 +12,8 @@ const{
 }	= require('../../controllers/news/video.js');
 
 
-router.route('/').get(getAll);
-router.route('/all').get(protect,getVideos);
+router.route('/').get(getVideos);
+router.route('/all').get(protect,getAll);
 router.route('/create').post(protect,create);
 router.route('/edit/:id').post(protect,edit);
 router.route('/:id').delete(protect,deletes);

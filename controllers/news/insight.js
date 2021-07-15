@@ -25,7 +25,7 @@ exports.create = async (req,res) => {
 	
 }
 
-exports.getAll = async(req,res) => {
+exports.getInsights = async(req,res) => {
 
 	const insight = await Insight.findAll({
 	  where: {
@@ -51,7 +51,7 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(insight);
 }
 
-exports.getInsights = async(req,res) => {
+exports.getAll = async(req,res) => {
 	const { page, size,status } = req.query;
 	const statusType = status ? status : ["active","inactive"];
   const { limit, offset } = getPagination(page, size);

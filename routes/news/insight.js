@@ -14,8 +14,8 @@ const{
 }	= require('../../controllers/news/insight.js');
 
 
-router.route('/').get(getAll);
-router.route('/all').get(protect,getInsights);
+router.route('/').get(getInsights);
+router.route('/all').get(protect,getAll);
 router.route('/limit/:limit').get(getLimit);
 router.route('/:id').get(getSingle);
 router.route('/create').post(protect,create);
