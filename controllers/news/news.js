@@ -2,6 +2,7 @@ const { News,Category } = require('../../models/news/News');
 const Media = require('../../models/Media')
 const PollResult = require('../../models/news/PollResult')
 //const { getThumbnail } = require('../media')
+const Adv = require('../../models/Adv')
 const { getPagination } = require('../../helpers/pagination');
 const { sendNotification } = require('../../helpers/notification.js')
 const { Op } = require("sequelize");

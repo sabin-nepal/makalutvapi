@@ -46,7 +46,7 @@ exports.checkAdv = async (req,res) => {
 	res.status(201).json();
 }
 
-exports.getAll = async(req,res) => {
+exports.getAdvs = async(req,res) => {
 	const adv = await Adv.findAll({
 	  where: {
 	    status: 'active',
@@ -64,7 +64,7 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(adv);
 }
 
-exports.getAdvs = async(req,res) => {
+exports.getAll = async(req,res) => {
 	const { page, size,status } = req.query;
 	const statusType = status ? status : ["active","inactive"];
   const { limit, offset } = getPagination(page, size);

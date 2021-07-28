@@ -1,5 +1,6 @@
 const { Video,Category } = require('../../models/news/Video');
 const Media = require('../../models/Media')
+const Adv = require('../../models/Adv')
 const { getPagination } = require('../../helpers/pagination');
 const { Op } = require("sequelize");
 
@@ -28,11 +29,30 @@ exports.create = async (req,res) => {
 }
 
 exports.getVideos = async(req,res)=>{
-
-	const video = await Video.findAll({
+	const {size,page} = req.query;
+	const {limit,offset} = getPagination(page,size);
+	let videoAdv = [];
+	const adv = await Adv.findAll({
+	  where: {
+	    status: 'active',
+	    type: 'banner',
+	  },
+	  include: [
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	},
+	    ], 
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	});
+	const videos = await Video.findAll({
 	  where: {
 	    status: 'active',
 	  },
+	  limit,
+	  offset,
 	  include:[
 	  		{
 	  		 model: Media,
@@ -52,8 +72,78 @@ exports.getVideos = async(req,res)=>{
 	  order: [
 	      ['createdAt', 'DESC'],
 	     ] 
+	})
+	var j = 0;
+	videos.map((video,key)=>{
+		videoAdv.push(video);
+		if(key%2===1 && adv.length > j){
+			videoAdv.push(adv[j]);
+			j++;
+		}
+		
+	}) 
+	res.status(200).json(videoAdv);
+
+}
+
+exports.getVideosTest = async(req,res)=>{
+	const {size,page} = req.query;
+	const {limit,offset} = getPagination(page,size);
+	let videoAdv = [];
+	const adv = await Adv.findAll({
+	  where: {
+	    status: 'active',
+	    type: 'banner',
+	  },
+	  limit,
+	  offset,
+	  include: [
+	    	{
+	    	 model: Media,
+	    	 attributes: ['id','path','type'],
+	    	},
+	    ], 
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
 	});
-	res.status(200).json(video);
+	const videos = await Video.findAll({
+	  where: {
+	    status: 'active',
+	  },
+	  limit,
+	  offset,
+	  include:[
+	  		{
+	  		 model: Media,
+	  		 as: 'thumbnail',
+	  		 attributes: ['path'],
+	  		},
+	  		{
+	  		 model: Media,
+	  		 as: 'media',
+	  		 attributes: ['path'],
+	  		},	
+	  		{
+	  		 model: Category,
+	  		 attributes: ['id','title'],
+	  		},	
+	  ],	    	
+	  order: [
+	      ['createdAt', 'DESC'],
+	     ] 
+	})
+	var j = 0;
+	videos.map((video,key)=>{
+		videoAdv.push(video);
+		if(key%2===1 && adv.length > j){
+			videoAdv.push(adv[j]);
+			j++;
+		}
+
+		
+	}) 
+	res.status(200).json(videoAdv);
 
 }
 

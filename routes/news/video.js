@@ -9,10 +9,12 @@ const{
 	getAll,
 	deletes,
 	getVideos,
+	getVideosTest
 }	= require('../../controllers/news/video.js');
 
 
 router.route('/').get(getVideos);
+router.route('/get').get(getVideosTest);
 router.route('/all').get(protect,getAll);
 router.route('/create').post(protect,create);
 router.route('/edit/:id').post(protect,edit);
