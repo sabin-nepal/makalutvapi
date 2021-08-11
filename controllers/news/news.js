@@ -185,7 +185,8 @@ exports.getdailyNews = async(req,res) => {
 }
 
 exports.getType = async(req,res) => {
-	const {type,size,page,order} = req.query;
+	const {type,size,page,order,categories} = req.query;
+	console.log(categories);
 	const postType = type ? type : ["news","poll"];
 	const limit = size ? Number(size) : null;
 	const offset = page ? page * limit : 0; 
@@ -202,6 +203,11 @@ exports.getType = async(req,res) => {
 	  include: [
 	    	{
 	    	 model: Category,
+			 where: {
+				id: {
+					[Op.or]: categories,
+				},
+			 },
 	    	 through: {attributes: []}
 	    	},
 	    	{
