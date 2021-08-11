@@ -37,6 +37,8 @@ exports.getVideos = async(req,res)=>{
 	    status: 'active',
 	    type: 'banner',
 	  },
+	  limit,
+	  offset,
 	  include: [
 	    	{
 	    	 model: Media,
