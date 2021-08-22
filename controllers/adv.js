@@ -47,10 +47,18 @@ exports.checkAdv = async (req,res) => {
 }
 
 exports.getAdvs = async(req,res) => {
+    const { page, size,type } = req.query;
+    const advType = type ? type : ["full","banner"];
+  const { limit, offset } = getPagination(page, size);
 	const adv = await Adv.findAll({
 	  where: {
 	    status: 'active',
+	    type:{
+				[Op.or]: [advType]
+			  },
 	  },
+	  limit,
+	  offset,
 	  include: [
 	    	{
 	    	 model: Media,

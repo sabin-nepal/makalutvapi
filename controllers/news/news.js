@@ -300,17 +300,15 @@ exports.deletes = async (req,res) => {
 //categorynews
 
 exports.getCategoryNews = async (req,res) => {
-
 	const {id} = req.params;
 	const {size,page} = req.query;
-	const limit = size ? size : 4;
-	const offset = page ? page * limit : 0; 
+	const {limit,offset} = getPagination(page,size);
 	const news = await News.findAll({
 		where: {
     	   status: 'active'
     	 },
-    	 limit: limit,
-    	 offset: offset,
+    	 limit,
+    	 offset,
     	 order: [
     	     ['createdAt', 'DESC'],
     	    ],
