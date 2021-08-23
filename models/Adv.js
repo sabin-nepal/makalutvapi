@@ -13,6 +13,7 @@ const Adv = db.define("advertisement", {
   title: Sequelize.STRING,
   startDate:Sequelize.DATE,
   endDate:Sequelize.DATE,
+  position: Sequelize.STRING,
   url: Sequelize.TEXT,
   type: {
     type: Sequelize.STRING,

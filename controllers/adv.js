@@ -5,7 +5,7 @@ const { getPagination } = require('../helpers/pagination');
 const { Op } = require("sequelize");
 exports.create = async (req,res) => {
 
-	const { title,url,media,startDate,endDate,status,type='banner'} = req.body
+	const { title,url,media,startDate,endDate,position,status,type='banner'} = req.body
 	if(!startDate || !endDate || !media)
 		return res.status(406).json({
 		  success: false,
@@ -18,6 +18,7 @@ exports.create = async (req,res) => {
 		startDate:startDate,
 		type:type,
 		url:url,
+		position: position,
 		endDate:endDate,
 		userId:req.user.id,
 	});
@@ -126,7 +127,7 @@ exports.getByType = async(req,res) => {
 // }
 
 exports.edit = async (req,res) => {
-	const { title,url,media,startDate,endDate,status,type} = req.body
+	const { title,url,media,startDate,endDate,position,status,type} = req.body
 	const adv = await Adv.findByPk(req.params.id);
 	if(!adv)
 		return res.status(401).json({
@@ -145,6 +146,7 @@ exports.edit = async (req,res) => {
 	adv.endDate = endDate
 	adv.status = status
 	adv.url = url
+	adv.position = position
 	adv.type = type
 	await adv.save();
 	//await adv.addMedia(media);
