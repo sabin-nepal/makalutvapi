@@ -185,13 +185,40 @@ exports.getdailyNews = async(req,res) => {
 }
 
 exports.getType = async(req,res) => {
-	const {type,size,page,order,categories} = req.query;
-	console.log(categories);
+	const {type,size,page,order,categories,id} = req.query;
 	const postType = type ? type : ["news","poll"];
+	var category = typeof categories === 'string' ? [categories] : categories
 	const limit = size ? Number(size) : null;
 	const offset = page ? page * limit : 0; 
 	const getOrder = order ? ['createdAt', 'DESC'] : db.random();
-	const news = await News.findAll({
+	let newsbyId;
+	if(id){
+		newsbyId = await News.findAll({
+			  where: {
+			    status: 'active',
+			    id: id,
+			    type:{
+						[Op.or]: [postType]
+					  }	
+			  },
+	   include: [
+	     	{
+	     	 model: Category,
+	     	 through: {attributes: []}
+	     	},
+	     	{
+	     	 model: Media,
+	     	 attributes: ['id','path','type'],
+	     	 through: {attributes: []}
+	     	},
+	     	{
+	     	 model: PollResult,
+	     	} 
+	     ],
+		})
+
+	}
+	var news = await News.findAll({
 	  where: {
 	    status: 'active',
 	    type:{
@@ -205,7 +232,7 @@ exports.getType = async(req,res) => {
 	    	 model: Category,
 			 where: {
 				id: {
-					[Op.or]: categories,
+					[Op.or]: category,
 				},
 			 },
 	    	 through: {attributes: []}
@@ -223,7 +250,12 @@ exports.getType = async(req,res) => {
 	      getOrder,
 	     ] 
 	});
-	res.status(200).json(news);		
+	if(newsbyId){
+		news = newsbyId.concat(news);
+	}
+	
+	res.status(200).json(news);
+		
 }
 
 exports.getSingle = async(req,res) => {
