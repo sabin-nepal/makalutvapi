@@ -36,7 +36,7 @@ exports.upload = async(req,res) =>  {
 					}
 				}
 			}
-			const url = `${process.env.UPLOAD_PATH}${fieldname}/${filename}`
+			const url = `${process.env.UPLOAD_URL}${fieldname}/${filename}`
 			var set =
 			{
 				'path':url,
