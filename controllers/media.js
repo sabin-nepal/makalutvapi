@@ -13,6 +13,7 @@ exports.getAll = async(req,res) => {
 	res.status(200).json(media);
 }
 
+
 exports.deletes = async(req,res) => {
 	const media = await Media.findByPk(req.params.id);
 	if(!media)
